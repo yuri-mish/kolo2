@@ -1,0 +1,24 @@
+.leftbar {
+    background-color: #004609;
+    width: 2rem;
+
+    margin: 0;
+    padding: 0;
+
+
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient:vertical;
+    flex-direction: column;
+    min-height:100%;
+    position : fixed;
+
+/*    height: 1000px;
+*/
+
+ 
+    align-items: center;
+    justify-content: normal;
+    font-size: 1rem ;
+    color: rgb(255, 255, 255);
+  }
