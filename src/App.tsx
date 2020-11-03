@@ -18,7 +18,7 @@ function App() {
   return (
     <div className="App">
 
-      <Navbar> sddfsdfsdf</Navbar>
+      <Navbar> </Navbar>
       <div className="restApp">
         <Leftbar><p>111</p> <p>222-222-4444</p> </Leftbar>
         <div className="workzone">
