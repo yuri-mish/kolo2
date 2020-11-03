@@ -11,7 +11,7 @@ export const SystemStateSlice = createSlice({
     reducers: {
             setUserName: (state, action) => {
                 state.userName = action.payload // mutate the state all you want with immer
-              },
+              }, 
             
             }
 })
