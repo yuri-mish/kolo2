@@ -10,7 +10,7 @@ import {SystemStateSlice} from './store/system/SystemState';
 //import SystemStateSlice from './store/system/SystemState';
 
 
-
+import {authentification} from './components/db'
 
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
         <div className="workzone">
           <Spinner show={false} />
           <button onClick={()=>{
-              
+              authentification('user1','user2')
               store.dispatch(SystemStateSlice.actions.setUserName(""+Math.round(Math.random()*1000)))
               console.log(store.getState());
               }}>22222</button>
