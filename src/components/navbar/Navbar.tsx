@@ -1,4 +1,5 @@
-import React,{FunctionComponent, useEffect}  from 'react';
+import React,{FunctionComponent, useEffect}  from 'react'
+;
 import {Button} from '@material-ui/core';
 
 
@@ -24,7 +25,7 @@ export const  Navbar:FunctionComponent<NavbarProps> = (props)=>{
      var st:string = store.getState().reduser.userName
      console.log(st);
      setuSt1(st)
-})
+    })
     console.log('NavBar -> usEffect')
    }, [])
    
