@@ -12,3 +12,13 @@
 [1103/161527.874:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
 [1103/175859.730:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
 [1104/114014.877:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
+[1105/102748.846:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/102748.848:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/102748.848:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/103748.848:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/103748.848:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/103748.848:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1105/103748.849:ERROR:filesystem_win.cc(116)] GetFileAttributes C:\Users\Prog1C\AppData\Local\Temp\.profile\Crashpad\reports\339ad103-fd89-48d6-92a0-5c5fa2ea1948.dmp: Не удается найти указанный файл. (0x2)
+[1105/103748.850:ERROR:filesystem_win.cc(116)] GetFileAttributes C:\Users\Prog1C\AppData\Local\Temp\.profile\Crashpad\reports\00583a23-4353-4466-82a5-73a10750671d.dmp: Не удается найти указанный файл. (0x2)
+[1105/103748.850:ERROR:filesystem_win.cc(116)] GetFileAttributes C:\Users\Prog1C\AppData\Local\Temp\.profile\Crashpad\reports\7153bb4e-4341-4688-a436-aa211a0940c3.dmp: Не удается найти указанный файл. (0x2)
+[1105/103748.850:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
