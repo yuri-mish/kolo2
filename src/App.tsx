@@ -8,10 +8,9 @@ import Spinner from './components/spinner/Spinner';
 import store  from './store';
 import {SystemStateSlice} from './store/system/SystemState';
 //import SystemStateSlice from './store/system/SystemState';
+
 import  GoodsCard from './db/classes/GoodsCardClass';
 import {ViewGoods}  from './db/classes/GoodsCardClass';
-
-
 
 function App() {
   var View = new GoodsCard('9999');
@@ -26,6 +25,7 @@ function App() {
         <div className="workzone">
           <Spinner show={false} />
           <button onClick={()=>{
+
               store.dispatch(SystemStateSlice.actions.setUserName(""+Math.round(Math.random()*1000)))
               //console.log(store.getState());
               }}>22222</button>
