@@ -1,6 +1,6 @@
 
 import React from 'react'
-import CatCard from '../dbclass';
+import Catalog from '../dbclass';
 
 
    
@@ -8,28 +8,28 @@ import CatCard from '../dbclass';
 //     priceValue?:number;
 // }
 
-class GoodsCard extends CatCard{
+class GoodsItem extends Catalog{
     /**
      * The price. 
      */
     price:number = 0 //aaaa
-    constructor(id:string=''){
-        super('goods',id)
+    constructor(uuid:string=''){
+        super( 'cat.goods', uuid)
     }
 
 }
 
 export const ViewGoods =(props:any)=>{
-    const CatObj = props.cls as GoodsCard
+    const CatObj = props.cls as GoodsItem
     return(
         <div>
-           <h1>={CatObj.id}=</h1> 
+           <h1>={CatObj._id}=</h1> 
         </div>
     )
 }
 
 
-export default GoodsCard
+export default GoodsItem
 
     
 
