@@ -26,6 +26,7 @@ declare type IDocCouch  = {
 
   abstract class Catalog extends DBItem {
     kod:string
+    deleted=false
     constructor( class_name:string, uuid:string|undefined = undefined ){
       super(class_name,uuid)
       this.kod = ''

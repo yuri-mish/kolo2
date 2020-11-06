@@ -8,10 +8,13 @@ import Catalog from '../dbclass';
 //     priceValue?:number;
 // }
 
-class GoodsItem extends Catalog{
+
+     class GoodsItem extends Catalog{
     /**
      * The price. 
      */
+    name=''
+    fullName=''
     price:number = 0 //aaaa
     constructor(uuid:string=''){
         super( 'cat.goods', uuid)

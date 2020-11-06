@@ -13,10 +13,9 @@ import {ViewGoods}  from './db/classes/GoodsCardClass';
 
 
 
-
-
 function App() {
   var View = new GoodsCard('9999');
+  
   //const dispatch=useDispatch();
   return (
     <div className="App">
@@ -28,7 +27,7 @@ function App() {
           <Spinner show={false} />
           <button onClick={()=>{
               store.dispatch(SystemStateSlice.actions.setUserName(""+Math.round(Math.random()*1000)))
-              console.log(store.getState());
+              //console.log(store.getState());
               }}>22222</button>
 
               <ViewGoods cls={View}/>
