@@ -6,7 +6,7 @@ import { Leftbar } from './components/leftbar/Leftbar';
 
 import Spinner from './components/spinner/Spinner';
 import store  from './store';
-import {SystemStateSlice} from './store/system/SystemState';
+import sessionState,{setUserName} from './store/system/sessionState';
 //import SystemStateSlice from './store/system/SystemState';
 
 import  GoodsCard from './db/classes/GoodsCardClass';
@@ -26,8 +26,8 @@ function App() {
           <Spinner show={false} />
           <button onClick={()=>{
 
-              store.dispatch(SystemStateSlice.actions.setUserName(""+Math.round(Math.random()*1000)))
-              //console.log(store.getState());
+              store.dispatch(setUserName(""+Math.round(Math.random()*1000)))
+              console.log(store.getState());
               }}>22222</button>
 
               <ViewGoods cls={View}/>

@@ -1,16 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { combineReducers } from 'redux'
+//import { configureStore,getDefaultMiddleware } from '@reduxjs/toolkit'
+import rootReducer from './rootReducer'
 
-import {SystemStateSlice} from './system/SystemState'
 
-const _reducer = SystemStateSlice.reducer;
+//import {sessionStateReducer} from './system/sessionState'
 
-const reducer = combineReducers({
-    reduser:_reducer,
-})
+
+
+// const middleware = [
+//   ...getDefaultMiddleware(),
+//   /*YOUR CUSTOM MIDDLEWARES HERE*/
+// ];
 
 const store = configureStore({
-  reducer:reducer,
+  reducer: rootReducer,
+   //middleware:middleware
 })
+
+export type AppDispatch = typeof store.dispatch
 
 export default store;

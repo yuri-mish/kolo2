@@ -1,11 +1,12 @@
 import React,{FunctionComponent, useEffect}  from 'react'
-;
-import {Button} from '@material-ui/core';
+import {LoginButton} from './LoginButton'
+
+
 
 
 import './Navbar.css'
 import store from '../../store'
-import  AccountBox  from '@material-ui/icons/AccountBox';
+
 
 
 
@@ -21,27 +22,16 @@ export const  Navbar:FunctionComponent<NavbarProps> = (props)=>{
   
 
    useEffect(()=>{
-    store.subscribe(()=>{
-     var st:string = store.getState().reduser.userName
-     console.log(st);
-     setuSt1(st)
-    })
+
     console.log('NavBar -> usEffect')
-   }, [])
+   }, []);
    
 return(
   <div className="navbar">
     {props.children}
     <div className="rightToolbar">
-                    <Button  
-                   /*   aria-controls={uMenuOpen ? 'menu-list-grow' : undefined} */
-                      aria-haspopup="true"
-                      classes={{root:'button',label:'label'}}>
-                         <AccountBox/> Name
-                    </Button>
+      <LoginButton/>   
     </div>
-
-
   </div>
   )
 }

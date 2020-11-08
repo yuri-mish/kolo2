@@ -1,6 +1,6 @@
 import {_DBSERVER_} from '../components/constants';
 import store from '../store';
-import { SystemStateSlice } from '../store/system/SystemState';
+import { setUserName} from '../store/system/sessionState';
 
 export const authentification=(login:string,password:string)=>{
 
@@ -36,7 +36,7 @@ export const authentification=(login:string,password:string)=>{
              })
              .then(data => {
 //              this.setState({error:false});
-              store.dispatch(SystemStateSlice.actions.setUserName(data.name))
+              store.dispatch(setUserName(data.name))
               console.log(store.getState());
               console.log('=auth respons=:'+JSON.stringify(data)) 
 //              this.props.setlog(true,data) 
