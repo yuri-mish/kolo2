@@ -6,6 +6,7 @@ import {LoginButton} from './LoginButton'
 
 import './Navbar.css'
 import store from '../../store'
+import { createStyles, makeStyles, Theme } from '@material-ui/core'
 
 
 
@@ -13,6 +14,7 @@ import store from '../../store'
 type NavbarProps = {
     title?:string,
 }
+
 
 
 export const  Navbar:FunctionComponent<NavbarProps> = (props)=>{

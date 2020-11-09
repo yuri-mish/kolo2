@@ -1,0 +1,23 @@
+.myDialog {
+    color: antiquewhite;
+
+}
+
+.MuiPaper-root p {
+    margin-top: 0px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.MuiPaper-root .err {
+    display: block;
+    font-size: 1.3rem;
+    color: #007900;
+    text-align: center;
+    align-self: center;
+}
+
+.MuiPaper-root .none {
+    display: none;
+}
+

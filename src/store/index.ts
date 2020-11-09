@@ -1,6 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import {sessionStateReducer} from './system/sessionState'
+
 //import { configureStore,getDefaultMiddleware } from '@reduxjs/toolkit'
-import rootReducer from './rootReducer'
+//import rootReducer from './rootReducer'
 
 
 //import {sessionStateReducer} from './system/sessionState'
@@ -11,7 +13,9 @@ import rootReducer from './rootReducer'
 //   ...getDefaultMiddleware(),
 //   /*YOUR CUSTOM MIDDLEWARES HERE*/
 // ];
-
+export const rootReducer = combineReducers({
+  session:sessionStateReducer,
+})
 const store = configureStore({
   reducer: rootReducer,
    //middleware:middleware
@@ -20,3 +24,6 @@ const store = configureStore({
 export type AppDispatch = typeof store.dispatch
 
 export default store;
+
+export type RootState = ReturnType<typeof rootReducer>
+export const selectSession = (state:RootState)=>state.session  //export const selectSessionUserName = (state:RootState)=>state.session.userName

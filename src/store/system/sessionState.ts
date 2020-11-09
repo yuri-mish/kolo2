@@ -20,8 +20,12 @@ export const sessionState = createSlice({
     initialState:initialSession, 
     reducers: {
             setUserName: (state, action) => {
-                state.userName = action.payload // mutate the state all you want with immer
+                state.userName = action.payload 
+                // mutate the state all you want with immer
               },
+            setLogged:(state,action) =>{
+              state.loggedIn = action.payload
+            } , 
             ddd:(state, action) =>{
                return state
             }  
@@ -31,7 +35,7 @@ export const sessionState = createSlice({
 
 
 
-export const {setUserName,ddd} = sessionState.actions
+export const {setUserName,setLogged,ddd} = sessionState.actions
 export const sessionStateReducer = sessionState.reducer
 export default sessionState
 
