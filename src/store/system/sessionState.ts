@@ -2,17 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface ISession  {
   loggedIn: boolean,
+  sessionCheking:boolean,
   userName: string
  } 
 
 
 const initialSession:ISession = {
   loggedIn: false,
+  sessionCheking:true,
   userName: ''
-}
-
-const foo = () => {
-  //return state
 }
 
 export const sessionState = createSlice({
@@ -23,19 +21,21 @@ export const sessionState = createSlice({
                 state.userName = action.payload 
                 // mutate the state all you want with immer
               },
-            setLogged:(state,action) =>{
-              state.loggedIn = action.payload
-            } , 
-            ddd:(state, action) =>{
-               return state
-            }  
+              setLogged:(state,action) =>{
+                state.loggedIn = action.payload
+              } , 
+              setSessionChecking:(state,action) =>{
+                state.sessionCheking = action.payload
+              } 
            
             }
 })
 
 
 
-export const {setUserName,setLogged,ddd} = sessionState.actions
+export const {setUserName,setLogged,setSessionChecking} = sessionState.actions
 export const sessionStateReducer = sessionState.reducer
+
+
 export default sessionState
 

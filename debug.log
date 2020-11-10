@@ -111,3 +111,5 @@
 [1109/121926.089:ERROR:filesystem_win.cc(116)] GetFileAttributes C:\Users\Prog1C\AppData\Local\Temp\.profile\Crashpad\reports\5724e683-f1dd-44f4-ae56-9d212010d20a.dmp: Не удается найти указанный файл. (0x2)
 [1109/121926.089:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
 [1109/172502.640:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
+[1110/122611.812:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
+[1110/141452.483:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)

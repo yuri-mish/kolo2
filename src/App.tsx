@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent, useEffect } from "react";
 
 import "./App.css";
 import { Navbar } from "./components/navbar/Navbar";
@@ -14,14 +14,23 @@ import { ViewGoods } from "./db/classes/GoodsCardClass";
 import Login from "./components/login/Login";
 import { useSelector } from "react-redux";
 
-function App() {
-  var View = new GoodsCard("9999");
+import { checkSession } from "./components/CouchFunc";
+import { selectSessionChecking } from './store/index';
+
+const App: FunctionComponent = () => {
   const logged: boolean = useSelector(selectSession).loggedIn;
+  const sessionCheking: boolean = useSelector(selectSessionChecking);
+
+  useEffect(() => {
+    checkSession();
+  }, []);
+
+  var View = new GoodsCard("9999");
   //const dispatch=useDispatch();
   return (
     <div className="App">
       <Spinner show={false} />
-      {!logged && <Login />}
+      {!logged  && !sessionCheking && <Login />}
       {logged && (
         <div>
           <Navbar title="Коло 2"> </Navbar>
@@ -47,6 +56,6 @@ function App() {
       )}
     </div>
   );
-}
+};
 
 export default App;

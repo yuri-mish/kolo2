@@ -26,4 +26,5 @@ export type AppDispatch = typeof store.dispatch
 export default store;
 
 export type RootState = ReturnType<typeof rootReducer>
-export const selectSession = (state:RootState)=>state.session  //export const selectSessionUserName = (state:RootState)=>state.session.userName
+export const selectSession = (state:RootState)=>state.session;  //export const selectSessionUserName = (state:RootState)=>state.session.userName
+export const selectSessionChecking = (state:RootState)=>state.session.sessionCheking;

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Button, ClickAwayListener, createStyles, Grow, makeStyles, MenuItem, MenuList, Paper, Popper, Theme } from "@material-ui/core";
+import { Button, ClickAwayListener, createStyles, makeStyles, MenuItem, MenuList, Paper, Popper, Theme } from "@material-ui/core";
 import AccountBox from "@material-ui/icons/AccountBox";
 import { useSelector } from "react-redux";
 import { selectSession } from '../../store';
+import {logout} from '../CouchFunc';
 
 export const LoginButton: React.FC = () => {
 
-  type MouseEvent = React.MouseEvent<HTMLLIElement, MouseEvent>;
-  type InputEvent = React.ChangeEvent<HTMLInputElement>;
   type KeyboardEvent = React.KeyboardEvent<HTMLUListElement>;
 
   const [open, setOpen] = useState(false);
@@ -25,8 +24,11 @@ const useStyles = makeStyles((theme: Theme)=>createStyles({
   root: {
     display: 'flex',
   },
-  paper: {
-    marginRight: theme.spacing(0,2),
+
+  mpopper: {
+    display: 'flex',
+    marginRight: '2rem',
+    borderColor:'#004600'   
   },
 
   formControl:{
@@ -56,18 +58,30 @@ function handleListKeyDown(event:KeyboardEvent) {
 }
 
 const handleClose = (event:any) => {
-  //const curr = Button.current
-//  if (curr && curr.contains(event.target)) {
-     return;
-//  }
+  let id=''
+  if (anchorRef.current){
+   if(anchorRef.current.contains(event.target)) {
+    return;
+    }
+    id = event.target.id; 
+  }
+  switch (id){
+
+    case 'logout': 
+        logout();
+      break
+    default:
+  }
+
+  setOpen(false);
 }
+
 
   const classes = useStyles({});
   return (
-    <div className={classes.root}>
+    <div ref={anchorRef} >
     <Button
       /*   aria-controls={uMenuOpen ? 'menu-list-grow' : undefined} */
-      
       onClick={handleToggle}
       aria-haspopup="true"
       className={classes.button}>
@@ -75,24 +89,18 @@ const handleClose = (event:any) => {
       <AccountBox color={logged?"inherit":"error"} />
        {logged?userName:'вхід'}
     </Button>
-    <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-    {({ TransitionProps, placement }) => (
-      <Grow
-        {...TransitionProps}
-        style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-      >
-        <Paper>
+    <div className={classes.root}>
+    <Popper  className={classes.mpopper} open={open} anchorEl={anchorRef.current} role={undefined}   >
+           <Paper>
           <ClickAwayListener onClickAway={handleClose}>
             <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <MenuItem id="profile" disabled={true} onClick={handleClose}>Profile</MenuItem>
+              <MenuItem id="logout"  onClick={handleClose}>Logout</MenuItem>
             </MenuList>
           </ClickAwayListener>
         </Paper>
-      </Grow>
-    )}
     </Popper>
+    </div>
     </div>
   );
 };

@@ -7,7 +7,7 @@ type SpinnerProps = {
 }
 
 const Spinner:FunctionComponent<SpinnerProps>=(props)=>{
-    console.log (props)
+//    console.log (props)
     if (props.show === undefined || props.show)
         return(
             <div className="spin">

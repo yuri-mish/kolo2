@@ -11,8 +11,8 @@
 
 .MuiPaper-root .err {
     display: block;
-    font-size: 1.3rem;
-    color: #007900;
+    font-size: 1rem;
+    color: #ff0202;
     text-align: center;
     align-self: center;
 }

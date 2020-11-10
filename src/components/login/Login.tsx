@@ -1,86 +1,44 @@
-import React, { useState } from "react";
-import { Button, TextField,FormLabel, createStyles, withStyles, makeStyles, Theme} from "@material-ui/core";
+import React, { FunctionComponent, useState } from "react";
+import { Button, TextField, createStyles, makeStyles} from "@material-ui/core";
 
 
 
 
 import Dialog from "@material-ui/core/Dialog";
-//import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-//import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
-//import Select from "@material-ui/core/Select";
-//import InputLabel from "@material-ui/core/InputLabel";
-//import Input from "@material-ui/core/Input";
+
 
 import "./Login.css";
 
-import {_DBSERVER_} from '../constants';
-import store from './../../store/index';
-import { setLogged, setUserName } from "../../store/system/sessionState";
+import {authentification} from '../CouchFunc';
+
 
 
  
-const Login  = () => {
+const Login:FunctionComponent  = () => {
 
   type ButtonEvent = React.MouseEvent<HTMLButtonElement>;
   type InputEvent = React.ChangeEvent<HTMLInputElement>;
+  type KeyboardEvent = React.KeyboardEvent<HTMLUListElement|HTMLInputElement|HTMLDivElement>;
 
     const [userName, setName] = useState('')
     const [password, setPassword] = useState('')
-
+    const [isError,setError] = useState(false)
     
 
   const handleChangeUsername = (event:InputEvent) => { setName(event.target.value) }
   const handleChangePassword = (event:InputEvent) => { setPassword(event.target.value) }
 
-  const handleSubmit = (event:ButtonEvent) => {
-  
-    const sendData={
-      name: userName,
-      password: password
-    }
+  const handleSubmit = (event?:ButtonEvent) => {
+        authentification(userName,password,()=>{
+          setError(true)
+        });
+   };
 
-  const requestOptions:RequestInit = {
-      method: 'POST',
-      mode: 'cors',
-      cache:'no-cache',
-      credentials: 'include',
-      headers: { 
-                  'Content-Type': 'application/json'
-               },
-      body: JSON.stringify(sendData)
-    }
 
-  event.preventDefault();
 
-  console.log('=sendData'+requestOptions.body) 
-
-  fetch(_DBSERVER_+'/_session',requestOptions)
-    .then(response => {
-           if(response.ok) {
-             return(response.json()
-                );
-
-           } else {
-            //this.setState({error:true});
-            throw new Error('Something went wrong ...');
-          }
-           })
-           .then(data => {
-            //this.setState({error:false});
-            console.log('=auth respons=:'+JSON.stringify(data))
-            store.dispatch(setLogged(true)) 
-            store.dispatch(setUserName(data.name)) 
-
-            //this.props.setlog(true,data) 
-
-                }      
-              )
-         .catch(error => console.log( '=Error=:'+error));
-  };
-
-  const useStyles = makeStyles(({ spacing }: Theme)=>
+  const useStyles = makeStyles(()=>
     createStyles({
       
       formControl:{
@@ -91,11 +49,14 @@ const Login  = () => {
 
       textControl:{
         marginBottom:"1rem",
-        width:"100%",
-        "&$focused": {
-          color: "yellow"
-        }
+        width:"100%"
       },
+
+      error:{
+        color: 'red',
+        'font-size': '0.1rem'
+      },
+
       submitbutton:{
    
         marginTop:"1rem",
@@ -110,41 +71,49 @@ const Login  = () => {
     })
     )
     
+    const KeybEnter = (event:KeyboardEvent)=>{
+      const ENTER:number = 13;
+ 
+      if (event.keyCode ===ENTER)
+        handleSubmit()
+
+    }
 
     const classes = useStyles({});
     return (
-    
-            <Dialog disableBackdropClick disableEscapeKeyDown open={true}>
-              <DialogContent >
-              <p> Вкажіть логін та пароль </p>
-                <form className="container" >
-                  <FormControl className={classes.formControl} >
-                    <TextField 
-                      className={classes.textControl}
-                      variant="outlined" 
-                      id="username"
-                      label="користувач"
-                      onChange={handleChangeUsername}
-                      value={userName}
-                    />
-                    <TextField
-                      className={classes.textControl}
-                      type="password"
-                      variant="outlined"
-                      autoComplete="disabled"
-                      id="password"
-                      label="пароль"
-                      onChange={handleChangePassword}
-                      value={password}
-                    />
-     
-                    <Button onClick={handleSubmit}  variant="contained" autoCapitalize="false" className={classes.submitbutton}> Надіслати </Button>
-    
-                  </FormControl>
-                </form>
-              </DialogContent>
-            </Dialog>
-  
+      <Dialog disableBackdropClick disableEscapeKeyDown open={true} onKeyUp={KeybEnter}>
+      <DialogContent >
+      <p> Вкажіть логін та пароль </p>
+        <form className="container" >
+          <FormControl className={classes.formControl} >
+            <TextField 
+              className={classes.textControl}
+              variant="outlined" 
+              id="username"
+              label="користувач"
+              onChange={handleChangeUsername}
+              value={userName}
+            />
+            <TextField
+              className={classes.textControl}
+              type="password"
+              variant="outlined"
+              autoComplete="disabled"
+              id="password"
+              label="пароль"
+              onChange={handleChangePassword}
+              value={password}
+            />
+
+            {isError && <p className='err'>   невірний логін чи пароль</p> }
+
+            <Button onClick={handleSubmit} variant="contained" autoCapitalize="false" className={classes.submitbutton}> Надіслати </Button>
+
+          </FormControl>
+        </form>
+      </DialogContent>
+    </Dialog>
+
     )
   
 }
