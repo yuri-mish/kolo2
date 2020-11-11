@@ -1,8 +1,12 @@
-import { _DBSERVER_ } from "./constants";
+import { _DBSERVER_,_DATABASE_ } from "./constants";
 import store from "../store";
-import { setUserName, setLogged, setSessionChecking } from "../store/system/sessionState";
+import { setUserName, setLogged, setSessionChecking,setUserRoles } from "../store/system/sessionState";
+import Pouchdb from 'pouchdb'
+import PouchdbFind from 'pouchdb-find';
+
 
 type CBFunction = (props: any) => any;
+Pouchdb.plugin(PouchdbFind)
 
 export const authentification = (login: string, password: string, error?: CBFunction) => {
   const sendData = {
@@ -15,11 +19,12 @@ export const authentification = (login: string, password: string, error?: CBFunc
     sendData,
     (dataObject) => {
       if (dataObject) {
-        store.dispatch(setLogged(true));
-        store.dispatch(setUserName(dataObject.name));
-        console.log(store.getState());
+        store.dispatch(setLogged(true))
+        store.dispatch(setUserName(dataObject.name))
+        store.dispatch(setUserRoles(dataObject.roles))
+        console.log(store.getState())
       } else {
-        store.dispatch(setLogged(false));
+        store.dispatch(setLogged(false))
       }
       console.log("=auth respons=:" + JSON.stringify(dataObject));
     },
@@ -44,7 +49,8 @@ export const checkSession = () => {
         if (dataObject.userCtx.name !== null) {
           store.dispatch(setLogged(true))
           store.dispatch(setUserName(dataObject.userCtx.name))
-          }
+          store.dispatch(setUserRoles(dataObject.userCtx.roles))
+        }
       }
       store.dispatch(setSessionChecking(false))
     })
@@ -76,12 +82,18 @@ export const dbfetch = (
         return response.json();
       } else {
         if (callbackErr) callbackErr(response);
-        console.log("Something went wrong ... in fetch");
+//        console.log("Something went wrong ... in fetch");
       }
     })
     .then((data) => {
-      if (callbackOK) callbackOK(data);
-//      console.log("=auth respons=:" + JSON.stringify(data));
+      if (data && callbackOK) callbackOK(data);
     })
     .catch((error) => console.log("=Error=:" + error));
 };
+
+export const dbinit=()=> {
+  let catdb = new Pouchdb('cat')
+  let docdb = new Pouchdb('doc')
+  let c_catdb = new Pouchdb(_DBSERVER_+'/'+)
+  
+}

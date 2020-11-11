@@ -1,14 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import {sessionStateReducer} from './system/sessionState'
 
-//import { configureStore,getDefaultMiddleware } from '@reduxjs/toolkit'
-//import rootReducer from './rootReducer'
-
-
-//import {sessionStateReducer} from './system/sessionState'
-
-
-
 // const middleware = [
 //   ...getDefaultMiddleware(),
 //   /*YOUR CUSTOM MIDDLEWARES HERE*/

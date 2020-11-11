@@ -95,7 +95,7 @@ const handleClose = (event:any) => {
           <ClickAwayListener onClickAway={handleClose}>
             <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
               <MenuItem id="profile" disabled={true} onClick={handleClose}>Profile</MenuItem>
-              <MenuItem id="logout"  onClick={handleClose}>Logout</MenuItem>
+              <MenuItem id="logout"  onClick={handleClose}>Вихід</MenuItem>
             </MenuList>
           </ClickAwayListener>
         </Paper>

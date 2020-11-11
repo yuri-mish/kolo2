@@ -17,7 +17,7 @@ import Catalog from '../dbclass';
     fullName=''
     price:number = 0 //aaaa
     constructor(uuid:string=''){
-        super( 'cat.goods', uuid)
+        super( 'cat.nom', uuid)
     }
 
 }
