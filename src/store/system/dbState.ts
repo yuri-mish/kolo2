@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Pouchdb } from 'pouchdb';
 
-export interface ISession  {
-  loggedIn: boolean,
+export interface IBases  {
+  catdb: Pouchdb.DataBase,
   sessionCheking:boolean,
   userName: string,
   roles:string[],

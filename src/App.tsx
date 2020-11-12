@@ -14,20 +14,24 @@ import { ViewGoods } from "./db/classes/GoodsCardClass";
 import Login from "./components/login/Login";
 import { useSelector } from "react-redux";
 
-import { checkSession } from "./components/CouchFunc";
+import { checkSession, dbinit } from "./components/CouchFunc";
 import { selectSessionChecking } from './store/index';
 
 const App: FunctionComponent = () => {
   const logged: boolean = useSelector(selectSession).loggedIn;
   const sessionCheking: boolean = useSelector(selectSessionChecking);
 
+  if (logged) dbinit();
+
   useEffect(() => {
     checkSession();
   }, []);
 
-  var View = new GoodsCard("9999");
+  
+    var View = new GoodsCard("9999");
   //const dispatch=useDispatch();
-  return (
+
+return (
     <div className="App">
       <Spinner show={false} />
       {!logged  && !sessionCheking && <Login />}
