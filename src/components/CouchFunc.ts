@@ -38,9 +38,9 @@ export const authentification = (login: string, password: string, error?: CBFunc
 };
 
 export const logout = () => {
-  dbfetch("DELETE", "_session", {}, () => {
-    store.dispatch(setLogged(false));
-  });
+  //dbfetch("DELETE", "_session", {});
+      
+  store.dispatch(setLogged(false));
 };
 
 export const checkSession = () => {

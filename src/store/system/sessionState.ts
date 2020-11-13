@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { createSelector } from 'reselect';
 
@@ -35,7 +35,10 @@ const initialSession:ISession = {
 }
 }
 
-
+const setLogoutThunk = createAsyncThunk(
+  'session/logoutAsync',
+  async ()=>{}
+)
 
 export const sessionState = createSlice({
     name: 'session', 
@@ -54,9 +57,7 @@ export const sessionState = createSlice({
               }, 
               setLogged:(state,action) =>{
                 state.loggedIn = action.payload
-              //   if (!action.payload){
-              //     state = initialSession
-              //   }
+              
                }, 
               setSessionChecking:(state,action) =>{
                 state.sessionCheking = action.payload
@@ -107,7 +108,8 @@ export const selectSessionChecking = createSelector(
 )
 export const selectSessionLogin = createSelector(
   selSessionLogin,
-  (LoggedIn:boolean)=> LoggedIn
+  (LoggedIn:boolean)=> {
+      return LoggedIn}
 )
 export const selectUserChanged = createSelector(
   selSessionUserChanged,
