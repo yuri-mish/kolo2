@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Button, ClickAwayListener, createStyles, makeStyles, MenuItem, MenuList, Paper, Popper, Theme } from "@material-ui/core";
 import AccountBox from "@material-ui/icons/AccountBox";
 import { useSelector } from "react-redux";
-import { selectSession } from '../../store';
+
 import {logout} from '../CouchFunc';
+import { selectSessionUserName, selectSessionLogin } from './../../store/system/sessionState';
 
 export const LoginButton: React.FC = () => {
 
@@ -12,14 +13,9 @@ export const LoginButton: React.FC = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
-  const session = useSelector(selectSession)
-  let userName: string = session.userName;
-  let logged:boolean = session.loggedIn; //selectSessionUserName)
-  //    let  userName:string = useSelector ((state:RootState) => state.session.userName)//selectSessionUserName)
-
-
-
-
+  let userName: string = useSelector(selectSessionUserName);
+  let logged:boolean = useSelector(selectSessionLogin); //selectSessionUserName)
+  
 const useStyles = makeStyles((theme: Theme)=>createStyles({
   root: {
     display: 'flex',

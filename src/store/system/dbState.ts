@@ -1,80 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Pouchdb } from 'pouchdb';
+import Pouchdb from 'pouchdb';
+import { _DBSERVER_,_DATABASE_SUB_,_DATABASE_ } from './../../components/constants';
 
 export interface IBases  {
-  catdb: Pouchdb.DataBase,
-  sessionCheking:boolean,
-  userName: string,
-  roles:string[],
-  userOptions:{
-    docDbName:string,
-    catDbName:string,
-    suffix:string,
-    
-}
-} 
+    catdb: PouchDB.Database|null,
+    docdb: PouchDB.Database|null,
+    cat_r_db?:PouchDB.Database|null,
+    doc_r_db?:PouchDB.Database|null,
+  } 
 
 
-const initialSession:ISession = {
-  loggedIn: false,
-  sessionCheking:true,
-  userName: '',
-  roles:[],
-  userOptions:{
-    docDbName:'doc',
-    catDbName:'ram',
-    suffix:'',
-}
-}
+const initialSession:IBases = {
+    catdb: null,
+    docdb: null,
+    cat_r_db:null,
+    doc_r_db:null,
+  }
 
-export const sessionState = createSlice({
-    name: 'session', 
+
+export const dbState = createSlice({
+    name: 'db', 
     initialState:initialSession, 
     reducers: {
-            setUserName: (state, action) => {
-              state.userName = action.payload 
-              // mutate the state all you want with immer
+            initDB: (state, action) => {
+                state.catdb = new Pouchdb('cat')
+                state.docdb = new Pouchdb('doc')
+                state.doc_r_db = new Pouchdb(_DBSERVER_+'/'+_DATABASE_+_DATABASE_SUB_+'_doc_'+action.payload.suffix) 
+                state.cat_r_db = new Pouchdb(_DBSERVER_+'/'+_DATABASE_+_DATABASE_SUB_+'_ram') 
+                console.log(state.catdb,state.docdb,state.cat_r_db,state.doc_r_db)
               },
-              setLogged:(state,action) =>{
-                state.loggedIn = action.payload
-                if (!action.payload){
-                  state.userName = '' 
-                  state.roles = []
-                }
-              } , 
-              setSessionChecking:(state,action) =>{
-                state.sessionCheking = action.payload
-              },
-              setUserRoles:(state,action) =>{
-                let pair:string[]
-                let _roles:string[] = []  
-                // eslint-disable-next-line array-callback-return
-                action.payload.forEach((element:string) => {
-                  
-                // }); 
-                // state.roles = action.payload.map((elem:string)=>{
-                  pair = element.split(':')
-                  if (pair.length === 1) return _roles.push(element)
-                  switch (pair[0]){
-                    case "docDbName":
-                      state.userOptions.docDbName = pair[1];break;
-                    case "catDbName":
-                      state.userOptions.catDbName = pair[1];break;
-                    case "suffix":
-                      state.userOptions.suffix = pair[1];break;
-                  }  
-
-                })
-                state.roles = _roles
-              }    
+            reinitDB:(state)=>{
+                let db  = state.docdb;
+                db?.destroy().then(()=>state.docdb = new Pouchdb('doc'))
+            }  
            
             }
 })
 
 
 
-export const {setUserName,setLogged,setSessionChecking,setUserRoles} = sessionState.actions
-export const sessionStateReducer = sessionState.reducer
+export const {initDB,reinitDB} = dbState.actions
+export const dbStateReducer = dbState.reducer
 
-export default sessionState
+export default dbState
 

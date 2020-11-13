@@ -1,7 +1,15 @@
+import Cookies from 'universal-cookie';
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "..";
+import { createSelector } from 'reselect';
+
+
+
+const cookies = new Cookies();
 
 export interface ISession  {
   loggedIn: boolean,
+  userChanged:boolean,
   sessionCheking:boolean,
   userName: string,
   roles:string[],
@@ -16,8 +24,9 @@ export interface ISession  {
 
 const initialSession:ISession = {
   loggedIn: false,
+  userChanged:false,
   sessionCheking:true,
-  userName: '',
+  userName: cookies.get('uname'),
   roles:[],
   userOptions:{
     docDbName:'doc',
@@ -26,21 +35,29 @@ const initialSession:ISession = {
 }
 }
 
+
+
 export const sessionState = createSlice({
     name: 'session', 
     initialState:initialSession, 
     reducers: {
             setUserName: (state, action) => {
-              state.userName = action.payload 
-              // mutate the state all you want with immer
+              if (state.userName !== action.payload) {
+                  state.userChanged = true;
+                  console.log ('User changed:'+state.userName+'=>'+action.payload)
+                  cookies.set('uname',action.payload,{maxAge: 8640000}) // Will expire after 3 mont.)
+               }
+              state.userName = action.payload
               },
+              setUserChanged:(state,action) =>{
+                state.userChanged = action.payload
+              }, 
               setLogged:(state,action) =>{
                 state.loggedIn = action.payload
-                if (!action.payload){
-                  state.userName = '' 
-                  state.roles = []
-                }
-              } , 
+              //   if (!action.payload){
+              //     state = initialSession
+              //   }
+               }, 
               setSessionChecking:(state,action) =>{
                 state.sessionCheking = action.payload
               },
@@ -72,8 +89,31 @@ export const sessionState = createSlice({
 
 
 
-export const {setUserName,setLogged,setSessionChecking,setUserRoles} = sessionState.actions
+export const {setUserName,setLogged,setSessionChecking,setUserRoles,setUserChanged} = sessionState.actions
 export const sessionStateReducer = sessionState.reducer
 
+const selSessionUserName = (state:RootState)=>state.session.userName; 
+const selSessionUserChanged = (state:RootState)=>state.session.userChanged; 
+const selSessionChecking = (state:RootState)=>state.session.sessionCheking; 
+const selSessionLogin = (state:RootState)=>state.session.loggedIn; 
+
+export const selectSessionUserName = createSelector(
+  selSessionUserName,
+  (UserName:string)=> UserName
+)
+export const selectSessionChecking = createSelector(
+  selSessionChecking,
+  (sessionCheking:boolean)=> sessionCheking
+)
+export const selectSessionLogin = createSelector(
+  selSessionLogin,
+  (LoggedIn:boolean)=> LoggedIn
+)
+export const selectUserChanged = createSelector(
+  selSessionUserChanged,
+  (userChanged:boolean)=> userChanged
+)
+
+ 
 export default sessionState
 

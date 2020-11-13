@@ -5,8 +5,9 @@ import { Navbar } from "./components/navbar/Navbar";
 import { Leftbar } from "./components/leftbar/Leftbar";
 
 import Spinner from "./components/spinner/Spinner";
-import store, { selectSession } from "./store";
-import { setUserName } from "./store/system/sessionState";
+import store from "./store";
+import { selectSessionChecking,selectSessionLogin, selectUserChanged } from './store/system/sessionState';
+import { setUserName,setUserChanged } from "./store/system/sessionState";
 //import SystemStateSlice from './store/system/SystemState';
 
 import GoodsCard from "./db/classes/GoodsCardClass";
@@ -14,14 +15,28 @@ import { ViewGoods } from "./db/classes/GoodsCardClass";
 import Login from "./components/login/Login";
 import { useSelector } from "react-redux";
 
-import { checkSession, dbinit } from "./components/CouchFunc";
-import { selectSessionChecking } from './store/index';
+import { checkSession} from "./components/CouchFunc";
+import {initDB,reinitDB} from "./store/system/dbState"
 
 const App: FunctionComponent = () => {
-  const logged: boolean = useSelector(selectSession).loggedIn;
+  const logged: boolean = useSelector(selectSessionLogin);
   const sessionCheking: boolean = useSelector(selectSessionChecking);
+  const userChanged:boolean = useSelector(selectUserChanged);
 
-  if (logged) dbinit();
+ console.log('logged:'+logged+'-checking:'+sessionCheking+'-changed:'+userChanged);
+
+ if (userChanged && logged) {
+  console.log('dbdoc to rebuild');
+  store.dispatch(reinitDB)
+  store.dispatch(setUserChanged(false))
+ }
+
+ if (logged) {
+   var state = store.getState()
+   var userCtx = state.session.userOptions;
+   if (!state.db.catdb)
+      store.dispatch(initDB(userCtx))
+ }
 
   useEffect(() => {
     checkSession();
@@ -31,12 +46,19 @@ const App: FunctionComponent = () => {
     var View = new GoodsCard("9999");
   //const dispatch=useDispatch();
 
+  if (sessionCheking)
+    return (
+      <Spinner show={true} />
+    )
+  
+  if (!logged)
+      return (
+        <Login />
+      )
+
 return (
     <div className="App">
-      <Spinner show={false} />
-      {!logged  && !sessionCheking && <Login />}
-      {logged && (
-        <div>
+      
           <Navbar title="Коло 2"> </Navbar>
           <div className="restApp">
             <Leftbar>
@@ -48,7 +70,7 @@ return (
                   store.dispatch(
                     setUserName("" + Math.round(Math.random() * 1000))
                   );
-                  console.log(store.getState());
+//                  console.log(store.getState());
                 }}>
                 22222
               </button>
@@ -57,8 +79,7 @@ return (
             </div>
           </div>
         </div>
-      )}
-    </div>
+      
   );
 };
 
