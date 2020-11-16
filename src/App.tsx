@@ -26,17 +26,11 @@ const App: FunctionComponent = () => {
  console.log('logged:'+logged+'-checking:'+sessionCheking+'-changed:'+userChanged);
 
  if (userChanged && logged) {
-  console.log('dbdoc to rebuild');
-  store.dispatch(reinitDB)
+  console.log('dbdoc to rebuild (todo!!!)');
+  //store.dispatch(reinitDB)
   store.dispatch(setUserChanged(false))
  }
 
- if (logged) {
-   var state = store.getState()
-   var userCtx = state.session.userOptions;
-   if (!state.db.catdb)
-      store.dispatch(initDB(userCtx))
- }
 
   useEffect(() => {
     checkSession();

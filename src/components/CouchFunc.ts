@@ -47,13 +47,14 @@ export const checkSession = () => {
   dbfetch("GET", "_session", {},
     (dataObject) => {
       if (dataObject) {
+        store.dispatch(setSessionChecking(false))
         if (dataObject.userCtx.name !== null) {
           store.dispatch(setUserName(dataObject.userCtx.name))
           store.dispatch(setUserRoles(dataObject.userCtx.roles))
           store.dispatch(setLogged(true))
         }
-      }
-      store.dispatch(setSessionChecking(false))
+      };
+      
     })
 
 };
@@ -64,6 +65,12 @@ export const dbinit=()=> {
 }
 
 export const reinit=()=> {
+}
+
+export const getDoc = (_id:string)=>{
+  dbfetch('GET','otk_2_ram/cat.bank|'+_id,{},(data)=>{
+      console.log(JSON.stringify(data))
+  })
 }
 
 export const dbfetch = (
@@ -92,8 +99,10 @@ export const dbfetch = (
       if (response.ok) {
         return response.json();
       } else {
-        if (callbackErr) callbackErr(response);
-//        console.log("Something went wrong ... in fetch");
+        if (callbackErr) {
+          callbackErr(response);
+          console.log("Something went wrong ... in fetch");
+        }
       }
     })
     .then((data) => {

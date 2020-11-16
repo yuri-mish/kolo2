@@ -62,7 +62,6 @@ const handleClose = (event:any) => {
     id = event.target.id; 
   }
   switch (id){
-
     case 'logout': 
         logout();
       break

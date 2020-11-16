@@ -4,9 +4,7 @@ import {dbStateReducer} from './system/dbState'
 //import { createSelector } from 'reselect'
 
  const middleware = [
-   {thunk:true,
-   immutableCheck: true,
-   serializableCheck: true}
+
    
    ...getDefaultMiddleware(),
    /*YOUR CUSTOM MIDDLEWARES HERE*/

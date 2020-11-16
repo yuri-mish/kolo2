@@ -48,7 +48,7 @@ export const sessionState = createSlice({
               if (state.userName !== action.payload) {
                   state.userChanged = true;
                   console.log ('User changed:'+state.userName+'=>'+action.payload)
-                  cookies.set('uname',action.payload,{maxAge: 8640000}) // Will expire after 3 mont.)
+                  cookies.set('uname',action.payload,{maxAge: 8640000}) // Will expire after 3 month.)
                }
               state.userName = action.payload
               },
@@ -56,10 +56,12 @@ export const sessionState = createSlice({
                 state.userChanged = action.payload
               }, 
               setLogged:(state,action) =>{
+                console.log('logging:'+action.payload)
                 state.loggedIn = action.payload
               
                }, 
               setSessionChecking:(state,action) =>{
+
                 state.sessionCheking = action.payload
               },
               setUserRoles:(state,action) =>{

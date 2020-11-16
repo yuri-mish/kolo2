@@ -2,6 +2,7 @@ import {v4 as guid} from 'uuid';
 
 declare type IDocCouch  = {
     _id:string,
+    _rev:string,
     ref:string|undefined,
     class_name:string
   }
@@ -11,7 +12,7 @@ declare type IDocCouch  = {
      * external reference
      */
     ref:string
-    _rev:string|undefined = undefined
+    _rev:string = ''
     class_name:string
 
     constructor( class_name:string, ref:string|undefined = undefined ){

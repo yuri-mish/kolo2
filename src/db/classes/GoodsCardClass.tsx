@@ -1,6 +1,7 @@
 
 import React from 'react'
 import Catalog from '../dbclass';
+import CatForm from '../CatForm';
 
 
    
@@ -25,9 +26,9 @@ import Catalog from '../dbclass';
 export const ViewGoods =(props:any)=>{
     const CatObj = props.cls as GoodsItem
     return(
-        <div>
+        <CatForm>
            <h1>={CatObj._id}=</h1> 
-        </div>
+        </CatForm>
     )
 }
 
