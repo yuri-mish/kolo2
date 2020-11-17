@@ -99,6 +99,7 @@ const selSessionUserName = (state:RootState)=>state.session.userName;
 const selSessionUserChanged = (state:RootState)=>state.session.userChanged; 
 const selSessionChecking = (state:RootState)=>state.session.sessionCheking; 
 const selSessionLogin = (state:RootState)=>state.session.loggedIn; 
+const selSessionUserRoles = (state:RootState)=>state.session.roles; 
 
 export const selectSessionUserName = createSelector(
   selSessionUserName,
@@ -116,6 +117,10 @@ export const selectSessionLogin = createSelector(
 export const selectUserChanged = createSelector(
   selSessionUserChanged,
   (userChanged:boolean)=> userChanged
+)
+export const selectUserRoles = createSelector(
+  selSessionUserRoles,
+  (roles:string[])=> roles
 )
 
  

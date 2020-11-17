@@ -67,10 +67,14 @@ export const dbinit=()=> {
 export const reinit=()=> {
 }
 
-export const getDoc = (_id:string)=>{
-  dbfetch('GET','otk_2_ram/cat.bank|'+_id,{},(data)=>{
+export const getDoc = (id:string,setObj:React.Dispatch<React.SetStateAction<any>>)=>{
+  dbfetch('GET','otk_2_ram/cat.banks|'+id,{},
+    (data)=>{
+      setObj(data)
       console.log(JSON.stringify(data))
-  })
+    },
+    ()=>{setObj(undefined)}
+    )
 }
 
 export const dbfetch = (
@@ -99,9 +103,9 @@ export const dbfetch = (
       if (response.ok) {
         return response.json();
       } else {
+        console.log("Something went wrong ... in fetch");
         if (callbackErr) {
           callbackErr(response);
-          console.log("Something went wrong ... in fetch");
         }
       }
     })
