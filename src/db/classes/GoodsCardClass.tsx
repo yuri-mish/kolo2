@@ -1,9 +1,7 @@
 
 import React from 'react'
 import Catalog from '../dbclass';
-import CatForm from '../CatForm';
-import { FormGroup, FormLabel,FormControl, Input, OutlinedInput, Dialog } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
+import { TextField, makeStyles } from '@material-ui/core';
 
 
 
@@ -27,9 +25,18 @@ import { TextField } from '@material-ui/core';
     
 }
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        paddingLeft:'10px',
+        paddingRight:'10px',
+
+    },
+}))
+
 export const ViewGoods =(props:any)=>{
 
 let catObject = props.catObject
+    const classes = useStyles()
     
     const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
@@ -38,12 +45,11 @@ let catObject = props.catObject
       };
     
       return(
-        <div>
-           {JSON.stringify(catObject)} 
+        <div className={classes.root}>
            <h1>={catObject._id}=</h1> 
            <div>
-               <TextField  label="Код" defaultValue={catObject.id} onChange={handleChange}/>
-               <TextField  label="Найменування" defaultValue={catObject.name} onChange={handleChange}/>
+               <TextField style={{width:'25%'}} id="id" label="Код" defaultValue={catObject.id} onChange={handleChange}/>
+               <TextField style={{width:'75%'}} id="name" label="Найменування" defaultValue={catObject.name} onChange={handleChange}/>
            </div>
         </div>   
     )

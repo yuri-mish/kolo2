@@ -1,9 +1,10 @@
-import { _DBSERVER_} from "./constants";
+import { _DATABASE_,_DATABASE_SUB_, _DBSERVER_} from "./constants";
 import store from "../store";
 import { setUserName, setLogged, setSessionChecking,setUserRoles } from "../store/system/sessionState";
 import Pouchdb from 'pouchdb'
 import PouchdbFind from 'pouchdb-find';
 import { initDB } from "../store/system/dbState";
+
 
 
 type CBFunction = (props: any) => any;
@@ -68,13 +69,31 @@ export const reinit=()=> {
 }
 
 export const getDoc = (id:string,setObj:React.Dispatch<React.SetStateAction<any>>)=>{
-  dbfetch('GET','otk_2_ram/cat.banks|'+id,{},
+  const userdb = getBaseByClassName(id)
+  dbfetch('GET',userdb+'/'+id,{},
     (data)=>{
       setObj(data)
       console.log(JSON.stringify(data))
     },
     ()=>{setObj(undefined)}
     )
+}
+
+const getBaseByClassName = (class_name:string) => {
+  const suffix = store.getState().session.userOptions.suffix
+  let db = _DATABASE_+_DATABASE_SUB_;
+  switch(class_name.split('.')[0]){
+    case 'cat':
+      db = db+'_ram'
+      break
+    case 'doc':
+      db = db+'_doc'
+      break
+  }
+  if (suffix !== '') 
+    db = db+'_'+suffix
+
+  return db
 }
 
 export const dbfetch = (

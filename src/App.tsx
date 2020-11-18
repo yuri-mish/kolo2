@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 import { checkSession} from "./components/CouchFunc";
 import {initDB,reinitDB} from "./store/system/dbState"
 import CatForm from "./db/CatForm";
+import DocForm from './db/DocForm';
+import { ViewOrder } from './db/classes/BuyerOrderClass';
 
 const App: FunctionComponent = () => {
   const logged: boolean = useSelector(selectSessionLogin);
@@ -69,7 +71,7 @@ return (
                 }}>
                 22222
               </button>
-              <CatForm ViewForm={ViewGoods} />
+              <DocForm _id="doc.buyers_order|78f80230-2374-11eb-960e-0328174f068d" ViewForm={ViewOrder} />
             </div>
           </div>
         </div>

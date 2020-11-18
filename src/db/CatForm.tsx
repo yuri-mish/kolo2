@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
         flexGrow: 1,
     },
+
     menuButton: {
         color:"rgb(230,230,230)",
         textTransform: "none",
@@ -45,13 +46,14 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const CatForm: FunctionComponent<catObject> = (props) => {
-  const [catObj, setObject] = useState<Catalog | undefined>();
-  const [dOpen, setDopen] = useState(true);
+  const [catObj, setObject] = useState<Catalog | undefined>((props.catObject===undefined)?undefined:props.catObject);
+  const [dialogOpen, setDialogOpen] = useState(true);
   const roles = useSelector(selectUserRoles);
   const readonly = !(roles.includes("ram_editor") || roles.includes("admin"))
 
   useEffect(() => {
-    getDoc("20874006-c8c1-11e9-8109-00155dcccf0a", setObject);
+      if (!catObj)
+        getDoc(props._id as string, setObject);
     return () => {};
   }, []);
 
@@ -59,24 +61,25 @@ const CatForm: FunctionComponent<catObject> = (props) => {
   V = props.ViewForm;
 
   const handleClose = () =>{
-    setDopen(false)
+    setDialogOpen(false)
   }
 
  // useform = true;
   const classes = useStyles();
 
   if (!catObj) return <div>Об'єкт не знайдено</div>;
+  
 
   return (
     <div >
-      <Dialog open={dOpen}>
+      <Dialog maxWidth='md' open={dialogOpen} >
         <AppBar className={classes.root} position="relative">
           <Toolbar className={classes.toolBar}>
             <Button className={classes.menuButton} disabled ={readonly}>Збереги й закрити</Button>
             <Button className={classes.menuButton} onClick={handleClose}>Закрити</Button>
           </Toolbar>
         </AppBar>
-        {<V catObject={catObj} disabled={readonly}/>}
+        <V catObject={catObj} disabled={readonly}/>
       </Dialog>
     </div>
   );
