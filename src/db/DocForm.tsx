@@ -11,6 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 type docObject = {
   docObject?: Document;
@@ -67,9 +68,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DocForm: FunctionComponent<docObject> = (props) => {
-  const [docObj, setObject] = useState<Document | undefined>(
-    props.docObject === undefined ? undefined : props.docObject
-  );
+  const [docObj, setObject] = useState<Document|null>(null);
   const [dialogOpen, setDialogOpen] = useState(true);
   const roles = useSelector(selectUserRoles);
   const readonly = !(roles.includes("doc_editor") || roles.includes("admin"));
@@ -107,6 +106,7 @@ const DocForm: FunctionComponent<docObject> = (props) => {
               <Button className={classes.menuButton} onClick={handleClose} endIcon={<CloseIcon />}>
                 Закрити
               </Button>
+              <IconButton className={classes.menuButton}><RefreshIcon/></IconButton>
               <IconButton className={classes.menuButton}><MenuIcon/></IconButton>
             </Toolbar>
           </div>

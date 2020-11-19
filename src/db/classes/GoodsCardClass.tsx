@@ -19,7 +19,7 @@ import { TextField, makeStyles } from '@material-ui/core';
     fullName=''
     price:number = 0 //aaaa
     constructor(uuid:string=''){
-        super( 'cat.nom', uuid)
+        super( 'cat.nom', 'Номенклатура', uuid)
     };
 
     

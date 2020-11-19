@@ -79,6 +79,18 @@ export const getDoc = (id:string,setObj:React.Dispatch<React.SetStateAction<any>
     )
 }
 
+export const getLookup = (class_name:string)=>{
+  const userdb = getBaseByClassName(class_name)
+    // dbfetch('GET',userdb+'/'+id,{},
+    // (data)=>{
+    //   setObj(data)
+    //   console.log(JSON.stringify(data))
+    // },
+    // ()=>{setObj(undefined)}
+    // )
+}
+
+
 const getBaseByClassName = (class_name:string) => {
   const suffix = store.getState().session.userOptions.suffix
   let db = _DATABASE_+_DATABASE_SUB_;
@@ -88,10 +100,11 @@ const getBaseByClassName = (class_name:string) => {
       break
     case 'doc':
       db = db+'_doc'
+      if (suffix !== '') 
+        db = db+'_'+suffix
       break
   }
-  if (suffix !== '') 
-    db = db+'_'+suffix
+  
 
   return db
 }
