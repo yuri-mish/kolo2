@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Document } from "../dbclass";
-import { Button, makeStyles, MenuItem, Select } from "@material-ui/core";
+import { Button, InputBase, makeStyles, MenuItem, Select } from "@material-ui/core";
 import  TextField from "@material-ui/core/TextField";
 import {
   KeyboardDateTimePicker,
@@ -8,6 +8,7 @@ import {
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { Partner } from './PartnersClass';
 import { getDoc } from "../../components/CouchFunc";
+import Autocomplete from '../../components/autocomplete/Autocomplete';
 
 // interface IGoodsCard extends CatCard  {
 //     priceValue?:number;
@@ -35,7 +36,7 @@ const seStyles = makeStyles((theme) => ({
 export const ViewOrder: FunctionComponent = (props: any) => {
   let docObject = props.docObject as BuyerOrder;
   const [selectedDate, setDate] = useState(new Date(docObject.date));
-  const [partnerObject, setPartner] = useState(0);
+  const [partnerRef, setPartner] = useState('');
   const classes = seStyles();      
 
  
@@ -47,7 +48,7 @@ export const ViewOrder: FunctionComponent = (props: any) => {
         p._id = doc._id
         docObject.partnerObject = p
     
-    setPartner(partnerObject+1);        
+    setPartner(s[1]);        
 }
 useEffect(() => {
     if (docObject?.partner) getDoc(("cat.partners|"+docObject.partner) as string, stPartner);
@@ -57,11 +58,17 @@ useEffect(() => {
 }, [])
 
   
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    let id: string = event.target.id;
-    docObject[id] = event.target.value;
-  };
+const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  event.preventDefault();
+  let id: string = event.target.id;
+  docObject[id] = event.target.value;
+};
+
+const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
+  event.preventDefault();
+  // let id: string = event.target.id;
+  // docObject[id] = event.target.value;
+};
 
   const handleChangeDate = (date: MaterialUiPickersDate) => {
     //const d = date as Date
@@ -75,14 +82,17 @@ useEffect(() => {
     value: unknown;
 }>, child: React.ReactNode) =>{
     docObject.partnerObject = new Partner(event.target.value as string)
+    setPartner(event.target.value as string)
     console.log('===')
 }
 
   const handleDateChange = (props: any) => {};
+  
+
 
   return (
     <div className={classes.root}>
-      <h2>={docObject.partnerObject}=</h2>
+      <h2>={docObject.partnerObject?.name}=</h2>
       <div>
         <TextField
           style={{ width: "25%", paddingRight: "1rem" }}
@@ -110,13 +120,33 @@ useEffect(() => {
         style={{ width: "65%", paddingRight: "1rem" }}
         id="partner"
         label="Контрагент"
-        value={docObject.partnerObject?.ref}
+        value={partnerRef}
+        
+        defaultValue={partnerRef}
         onChange={handleSelectChange}
       >
-          <MenuItem value={docObject.partnerObject?.ref}>{docObject.partnerObject?.name}</MenuItem>
-          <MenuItem value="123-235-56-5987">Rrrrr2</MenuItem>
+          <option value={docObject.partnerObject?.ref}>{docObject.partnerObject?.name}</option>
+          <option value="123-235-56-5987">Rrrrr2</option>
           
       </Select >         
+      <TextField
+        style={{ width: "65%", paddingRight: "1rem" }}
+        id="partner"
+        label="Контрагент"
+        value={partnerRef}
+        
+        defaultValue={partnerRef}
+        select
+        onClick={handleClick}
+        onChange={handleChange}
+      >
+          <option value={docObject.partnerObject?.ref}>{docObject.partnerObject?.name}</option>
+          <option value="123-235-56-5987">Rrrrr2</option>
+          
+          <div id="sdf" >anytext <TextField id="standard-basic" label="Standard" value="asd"/> <button>sdfsdf</button> </div>
+          
+      </TextField >     
+      <Autocomplete  defaultValue={docObject.partnerObject?.ref} /> 
     </div>
   );
 };

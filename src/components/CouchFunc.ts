@@ -3,7 +3,7 @@ import store from "../store";
 import { setUserName, setLogged, setSessionChecking,setUserRoles } from "../store/system/sessionState";
 import Pouchdb from 'pouchdb'
 import PouchdbFind from 'pouchdb-find';
-import { initDB } from "../store/system/dbState";
+// import { initDB } from "../store/system/dbState";
 
 
 
@@ -61,8 +61,46 @@ export const checkSession = () => {
 };
 
 
-export const dbinit=()=> {
-  store.dispatch(initDB)
+export const dbinit=async ()=> {
+  
+  const suffix = store.getState().session.userOptions.suffix
+  const departament = store.getState().session.userOptions.departament
+  const doc = new Pouchdb('doc')
+  console.log("cDBS:"+_DBSERVER_)
+  const _dbs = _DBSERVER_
+  const _db = _DATABASE_
+  const _sub = _DATABASE_SUB_
+  
+  console.log("_DBS:"+_dbs)
+
+ const remdoc = _dbs+'/'+_db+_sub+'_doc'+((suffix!=='')?('_'+suffix):'')
+  const doc_remote = new Pouchdb(remdoc)
+    doc.replicate.from(doc_remote,{
+      live:false,
+      retry:true,
+      selector: {"department": departament}
+    }
+
+  ).then(function (result) {
+    console.log('repl complete')
+    replicatePartners();
+
+    });
+  
+  // store.dispatch(initDB)
+}
+
+export const replicatePartners=()=>{
+  const doc = new Pouchdb('doc')
+  doc.find({
+    selector:{
+      "partner":{"$gt":""}
+    },
+    fields:["partner"]
+  }).then(function (result) {
+      const arr = result.docs.map((element:{partner:string} )=>("cat.partners|"+element.partner ))
+    console.log(arr)
+  })
 }
 
 export const reinit=()=> {
@@ -80,7 +118,7 @@ export const getDoc = (id:string,setObj:React.Dispatch<React.SetStateAction<any>
 }
 
 export const getLookup = (class_name:string)=>{
-  const userdb = getBaseByClassName(class_name)
+  // cnrdb = getBaseByClassName(class_name)
     // dbfetch('GET',userdb+'/'+id,{},
     // (data)=>{
     //   setObj(data)

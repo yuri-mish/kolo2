@@ -17,6 +17,7 @@ export interface ISession  {
     docDbName:string,
     catDbName:string,
     suffix:string,
+    departament:string
     
 }
 } 
@@ -32,6 +33,7 @@ const initialSession:ISession = {
     docDbName:'doc',
     catDbName:'ram',
     suffix:'',
+    departament:''
 }
 }
 
@@ -80,8 +82,10 @@ export const sessionState = createSlice({
                     case "catDbName":
                       state.userOptions.catDbName = pair[1];break;
                     case "suffix":
-                      state.userOptions.suffix = pair[1];break;
-                  }  
+                        state.userOptions.suffix = pair[1];break;
+                    case "branch":
+                        state.userOptions.departament = pair[1];break;
+                        }  
 
                 })
                 state.roles = _roles

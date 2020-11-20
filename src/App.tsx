@@ -15,7 +15,7 @@ import { ViewGoods } from "./db/classes/GoodsCardClass";
 import Login from "./components/login/Login";
 import { useSelector } from "react-redux";
 
-import { checkSession} from "./components/CouchFunc";
+import { checkSession, dbinit} from "./components/CouchFunc";
 import {initDB,reinitDB} from "./store/system/dbState"
 import CatForm from "./db/CatForm";
 import DocForm from './db/DocForm';
@@ -35,9 +35,17 @@ const App: FunctionComponent = () => {
  }
 
 
-  useEffect(() => {
-    checkSession();
+ useEffect(() => {
+  checkSession();
   }, []);
+
+  useEffect(() => {
+    if (logged) {
+          dbinit();
+        }
+    }, [logged]);
+  
+  
 
   
     var View = new GoodsCard("9999");
