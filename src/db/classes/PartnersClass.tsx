@@ -5,9 +5,21 @@ export class Partner extends Catalog{
     /**
      * The price. 
      */
-    price:number = 0 //aaaa
+    price:number = 0 //aaa
+    
     constructor(uuid:string=''){
         super( 'cat.partners','Контрагент', uuid)
+        Object.defineProperties(this,{
+            partnerRef:{
+                value:'=Ref=',
+                writable:true
+              } ,
+            partnerObj:{
+                value:'=Obj=',
+                writable:true
+              } 
+
+        })
     }
 }
 

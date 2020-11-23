@@ -10,14 +10,14 @@ import { selectSessionChecking,selectSessionLogin, selectUserChanged } from './s
 import { setUserName,setUserChanged } from "./store/system/sessionState";
 //import SystemStateSlice from './store/system/SystemState';
 
-import GoodsCard from "./db/classes/GoodsCardClass";
-import { ViewGoods } from "./db/classes/GoodsCardClass";
+// import GoodsCard from "./db/classes/GoodsCardClass";
+// import { ViewGoods } from "./db/classes/GoodsCardClass";
 import Login from "./components/login/Login";
 import { useSelector } from "react-redux";
 
 import { checkSession, dbinit} from "./components/CouchFunc";
-import {initDB,reinitDB} from "./store/system/dbState"
-import CatForm from "./db/CatForm";
+// import {initDB,reinitDB} from "./store/system/dbState"
+// import CatForm from "./db/CatForm";
 import DocForm from './db/DocForm';
 import { ViewOrder } from './db/classes/BuyerOrderClass';
 
@@ -48,7 +48,7 @@ const App: FunctionComponent = () => {
   
 
   
-    var View = new GoodsCard("9999");
+    // var View = new GoodsCard("9999");
   //const dispatch=useDispatch();
 
   if (sessionCheking)

@@ -90,17 +90,34 @@ export const dbinit=async ()=> {
   // store.dispatch(initDB)
 }
 
-export const replicatePartners=()=>{
+export  const replicatePartners= async ()=>{
+
+  let partArr:string[]
   const doc = new Pouchdb('doc')
-  doc.find({
+  const partnersToResolve = await doc.find({
     selector:{
       "partner":{"$gt":""}
     },
     fields:["partner"]
-  }).then(function (result) {
-      const arr = result.docs.map((element:{partner:string} )=>("cat.partners|"+element.partner ))
-    console.log(arr)
   })
+  //partnersToResolve
+  // .resol.then(function (result) {
+//    const arr = partnersToResolve.docs.map((elem:any)=>("cat.partners|"+elem.partner as string ))
+const partSet = new Set(partnersToResolve.docs.map((elem:any)=>("cat.partners|"+elem.partner as string )))
+
+partArr = Array.from(partSet)
+    
+const partnerInLocalCat = await doc.find({
+      selector:{
+        "id":{"$in":partArr}
+      },
+    //  fields:["_id,name"]
+    })
+const partSetName = new Set(partnerInLocalCat.docs.map((elem:any)=>(elem.partner as string )))
+       
+  //     //console.log('result:'+JSON.stringify(result))
+  //   })
+    console.log('==='+partSetName)
 }
 
 export const reinit=()=> {

@@ -2,11 +2,28 @@ import { v4 as guid } from 'uuid';
 
 export enum dbSourceType {Loacal,Remote}
 
+//interface IIndexable<T = any> { [key: string]: T }
+
+declare type IField={
+  
+  caption:string,
+  isRef:boolean,
+  length?:number,
+  decPoints?:number
+
+  class_name:string|any,
+  value?:any,
+
+  }
+
+
 declare type IDocCouch = {
   _id: string,
   _rev: string,
   ref: string | undefined,
   class_name: string,
+
+  fields:Record<string,IField>,
  
   deleted: boolean
 }
@@ -20,12 +37,14 @@ abstract class DBItem implements IDocCouch {
   class_name: string
   deleted = false
   classCaption=''
-    
+  fields : Record<string,IField> = { };
+
 
   constructor(class_name: string, classCaption: string, ref: string | undefined = undefined) {
     this.ref = (!ref) ? guid() : ref
     this.class_name = class_name
     this.classCaption = classCaption
+    this.fields = {}
   }
   
   public get _id(): string {
@@ -40,36 +59,73 @@ abstract class DBItem implements IDocCouch {
 
   save = () => { }
 
+  fillProperties = (source:{})=>{
+    const myProps = Object.getOwnPropertyNames(this)
+    const sourceProps = Object.getOwnPropertyNames(source)
+
+    let hasProps:string|undefined = undefined
+
+    myProps.forEach((element)=>{
+      console.log(element)
+      //  hasProps = sourceProps.find(element)
+
+
+    //   if (!sourceProps.)
+    // 
+    } ) 
+
+  }
+
 }
 
 abstract class Catalog extends DBItem {
-  kod: string
-  name: string
-
+ 
   constructor(class_name: string, classCaption:string, uuid: string | undefined = undefined) {
     super(class_name, classCaption, uuid)
-    this.kod = ''
-    this.name = ''
+    this.fields.kod = {
+      caption:'Код',
+      class_name:'string',
+      isRef:false,
+      value:''
+    }
+    this.fields.name = {
+      caption:'Найменування',
+      class_name:'string',
+      isRef:false,
+      value:''
+    }
   }
 
   public get Caption(){
-    return this.name
+    return ''//;this.fields['name' as keyof IField].name
   }
 
 }
 
 
 export abstract class Document extends DBItem {
-  date: Date
-  number_doc: string
+
+ 
   constructor(class_name: string, classCaption:string, uuid: string | undefined = undefined) {
-    super(class_name, classCaption, uuid)
-    this.number_doc = ''
-    this.date = new Date(0)
+      super(class_name, classCaption, uuid)
+    
+    this.fields.number_doc = {
+      caption:'Номер',
+      class_name:'string',
+      isRef:false,
+      value:''
+    }
+    this.fields.date = {
+      caption:'Дата',
+      class_name:'date',
+      isRef:false,
+      value :new Date(0)
+    }
   }
 
   public get Caption(){
-    return this.classCaption+' '+this.number_doc+' '+this.date
+  //  return '<имя класа>'
+    return this.classCaption+' '+this.fields.number_doc.value+' '+this.fields.date.value
   }
 }
 

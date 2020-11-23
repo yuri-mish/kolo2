@@ -74,8 +74,11 @@ const DocForm: FunctionComponent<docObject> = (props) => {
   const readonly = !(roles.includes("doc_editor") || roles.includes("admin"));
 
   useEffect(() => {
-    if (!docObj) getDoc(props._id as string, setObject);
+    if (!docObj) getDoc(props._id as string, (obj) =>{
+      setObject(obj)
+    });
     return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let V: any; //FunctionComponent;

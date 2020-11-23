@@ -19,10 +19,19 @@ class BuyerOrder extends Document {
     /**
    * Контрагент.
    */
-  partner: Partner|null
+   partnerObj: Partner|null = null
+
   constructor(uuid: string = "") {
     super("doc.buyer_order", uuid);
     this.partner = null
+    Object.defineProperties(this,{
+      y1:{
+        value:'eeeee',
+        writable:true,
+        set : (value1)=>{this.y1.value=value1},
+        get : ()=>{return this.y1.value}
+      }
+    })
   }
 }
 
@@ -34,17 +43,17 @@ const seStyles = makeStyles((theme) => ({
 }));
 
 export const ViewOrder: FunctionComponent = (props: any) => {
-  let docObject = props.docObject as BuyerOrder;
+  let docObject:BuyerOrder = props.docObject;
   const [selectedDate, setDate] = useState(new Date(docObject.date));
   const [partnerRef, setPartner] = useState('');
   const classes = seStyles();      
 
  
 //    docObject.partnerObject = partnerObject;  
-    const stPartner = (doc:Partner)=>{
-        const s = doc._id.split('|')
+    const stPartner = (doc:any)=>{
+        const s = doc._id.split('|') 
         const p = new Partner(s[1])
-        p.name = doc.name
+        p.fields.name.value = doc['name']
         p._id = doc._id
         docObject.partnerObject = p
     

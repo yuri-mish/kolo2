@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { createSelector } from 'reselect';
 
@@ -37,10 +37,10 @@ const initialSession:ISession = {
 }
 }
 
-const setLogoutThunk = createAsyncThunk(
-  'session/logoutAsync',
-  async ()=>{}
-)
+// const setLogoutThunk = createAsyncThunk(
+//   'session/logoutAsync',
+//   async ()=>{}
+// )
 
 export const sessionState = createSlice({
     name: 'session', 
