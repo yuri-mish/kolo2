@@ -19,7 +19,7 @@ import { checkSession, dbinit} from "./components/CouchFunc";
 // import {initDB,reinitDB} from "./store/system/dbState"
 // import CatForm from "./db/CatForm";
 import DocForm from './db/DocForm';
-import { ViewOrder } from './db/classes/BuyerOrderClass';
+import BuyerOrder, { ViewOrder } from './db/classes/BuyerOrderClass';
 
 const App: FunctionComponent = () => {
   const logged: boolean = useSelector(selectSessionLogin);
@@ -72,6 +72,8 @@ return (
             <div className="workzone">
               <button
                 onClick={() => {
+                  const m = new BuyerOrder('=0=')
+                  m.fillProperties({_id:"doc.buyers_order|78f80230-2374-11eb-960e-0328174f068d",name:'ttt'})
                   store.dispatch(
                     setUserName("" + Math.round(Math.random() * 1000))
                   );

@@ -12,9 +12,11 @@ import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import { cDocument } from "./dbclass";
+import { createObjectByName } from './dbfunc';
 
 type docObject = {
-  docObject?: Document;
+  docObject?: cDocument;
   _id?: string;
   ViewForm: FunctionComponent;
 };
@@ -68,14 +70,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DocForm: FunctionComponent<docObject> = (props) => {
-  const [docObj, setObject] = useState<Document|null>(null);
+  
+  const [docObj, setObject] = useState<cDocument|null>(null);
   const [dialogOpen, setDialogOpen] = useState(true);
   const roles = useSelector(selectUserRoles);
   const readonly = !(roles.includes("doc_editor") || roles.includes("admin"));
 
+  let class_name=''
+  let ref = ''
+  if (props._id){
+    const spl = props._id.split('|')
+    class_name = spl[0]
+    ref = spl[1]
+  }
+
+
   useEffect(() => {
     if (!docObj) getDoc(props._id as string, (obj) =>{
-      setObject(obj)
+      const o =createObjectByName(class_name) 
+      o?.fillProperties(obj)
+      if (o)
+         setObject(o as cDocument)
     });
     return () => {};
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,7 +113,7 @@ const DocForm: FunctionComponent<docObject> = (props) => {
       <Dialog className={classes.dialogroot} maxWidth="md" open={dialogOpen}>
         <AppBar className={classes.root} position="relative">
           <div className={classes.formName}>
-           <Toolbar className={classes.toolBarHeader}>Замовлення </Toolbar>
+           <Toolbar className={classes.toolBarHeader}> {docObj.Caption} </Toolbar>
            <Toolbar className={classes.toolBar}>
               <Button className={classes.menuButton} disabled={readonly} endIcon={<CheckIcon />}>
                 Провести

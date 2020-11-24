@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
-import Catalog from "./dbclass";
+import {cCatalog} from "./dbclass";
 
 import { getDoc } from "../components/CouchFunc";
 import { useEffect } from "react";
@@ -10,7 +10,7 @@ import { selectUserRoles } from './../store/system/sessionState';
 import { useSelector } from "react-redux";
 
 type catObject = {
-  catObject?: Catalog;
+  catObject?: cCatalog;
   _id?: string;
   ViewForm: FunctionComponent;
 };
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const CatForm: FunctionComponent<catObject> = (props) => {
-  const [catObj, setObject] = useState<Catalog | undefined>((props.catObject===undefined)?undefined:props.catObject);
+  const [catObj, setObject] = useState<cCatalog | undefined>((props.catObject===undefined)?undefined:props.catObject);
   const [dialogOpen, setDialogOpen] = useState(true);
   const roles = useSelector(selectUserRoles);
   const readonly = !(roles.includes("ram_editor") || roles.includes("admin"))

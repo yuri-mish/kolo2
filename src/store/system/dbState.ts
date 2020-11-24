@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Pouchdb from 'pouchdb';
-import { _DBSERVER_,_DATABASE_SUB_,_DATABASE_ } from './../../components/constants';
+// import Pouchdb from 'pouchdb';
+// import { _DBSERVER_,_DATABASE_SUB_,_DATABASE_ } from './../../components/constants';
 
 export interface IBases  {
 

@@ -1,13 +1,15 @@
-import React from 'react'
-import Catalog,{dbSourceType} from '../dbclass';
+// import React from 'react'
 
-export class Partner extends Catalog{
+import {cCatalog, dbSourceType} from '../dbclass'
+
+export class Partner extends cCatalog {
+    
     /**
      * The price. 
      */
-    price:number = 0 //aaa
+    price:number = 0 //aaa    
     
-    constructor(uuid:string=''){
+    constructor(uuid:string=''){ 
         super( 'cat.partners','Контрагент', uuid)
         Object.defineProperties(this,{
             partnerRef:{
