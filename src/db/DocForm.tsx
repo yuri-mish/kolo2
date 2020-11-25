@@ -110,7 +110,7 @@ const DocForm: FunctionComponent<docObject> = (props) => {
 
   return (
     <div>
-      <Dialog className={classes.dialogroot} maxWidth="md" open={dialogOpen}>
+      <Dialog className={classes.dialogroot} maxWidth="xl" open={dialogOpen}>
         <AppBar className={classes.root} position="relative">
           <div className={classes.formName}>
            <Toolbar className={classes.toolBarHeader}> {docObj.Caption} </Toolbar>

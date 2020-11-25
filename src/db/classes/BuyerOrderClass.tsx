@@ -20,22 +20,21 @@ class BuyerOrder extends cDocument {
   partnerObj: Partner | null = null;
 
   constructor(uuid: string = "") {
-    super("doc.buyer_order", "Замовлення", uuid);
-    this.partner = null;
+    super("doc.buyers_order", "Замовлення", uuid);
+    // this.partner = null;
 
-    this.fields.partner = {
-      caption: "Контрагент",
-      class_name: "cat.partners",
-      isRef: true,
-      value: undefined,
-      obj: {},
-    };
-    Object.defineProperties(this, {
-      partner: {
-        set: (value) => {this.fields.partner.isRef?(this.fields.partner.obj = value):(this.fields.partner.value = value)},
-        get: () => {return this.fields.partner.isRef?this.fields.partner.obj:this.fields.partner.value},
-      },
-    });
+    // this.fields.partner = {
+    //   caption: "Контрагент",
+    //   class_name: "cat.partners",
+    //   isRef: true,
+    //   value: undefined,
+    //   obj: {},
+    // };
+    // const a='partner'
+    // Object.defineProperty(this, a, {
+    //     set: (value) => {this.fields.partner.isRef?(this.fields.partner.obj = value):(this.fields.partner.value = value)},
+    //     get: eval("return this.fields.partner.isRef?this.fields.partner.obj:this.fields.partner.value") //()=> {return this.fields.partner.isRef?this.fields.partner.obj:this.fields.partner.value},
+    // });
   }
 }
 
@@ -56,18 +55,11 @@ export const ViewOrder: FunctionComponent = (props: any) => {
 
   //    docObject.partnerObject = partnerObject;
   const stPartner = (doc: any) => {
-    if (doc){
-    const s = doc._id.split("|");
-    const p = new Partner(s[1]);
-    p.fillProperties(doc);
-    docObject.partner = p;
-    setPartner(s[1]);
-  }
-  else{
-    docObject.partner = new Partner(mdb.emptyRef);
-    docObject.partner.fields.name.value='<не знайдено>'
-    setPartner(mdb.emptyRef);
-  }
+    const ref = doc?doc._id.split("|")[1]:mdb.emptyRef
+    docObject.partner = new Partner(ref);
+    if (doc){ docObject.partner.fillProperties(doc)}
+    else{ docObject.partner.name='<не знайдено>'}
+    setPartner(ref);
   };
   useEffect(() => {
     getDoc("cat.partners|" + docObject.fields.partner.value, stPartner);
@@ -108,7 +100,7 @@ export const ViewOrder: FunctionComponent = (props: any) => {
 
   return (
     <div className={classes.root}>
-      <h2>={docObject.partner.fields?.name.value}=</h2>
+      <h2>={docObject.partner?.name}=</h2>
       <div>
         <TextField
           style={{ width: "25%", paddingRight: "1rem" }}
@@ -140,8 +132,8 @@ export const ViewOrder: FunctionComponent = (props: any) => {
         //defaultValue={partnerRef}
         onChange={handleSelectChange}>
          <option value="0000" disabled>Оберіть ...</option>
-         <option value={docObject.partner.ref}>
-          {docObject.partner.Caption}
+         <option value={docObject.partner?.ref}>
+          {docObject.partner?.Caption}
         </option>
         <option value="123-235-56-5987">Rrrrr2</option>
       </Select>
@@ -154,8 +146,8 @@ export const ViewOrder: FunctionComponent = (props: any) => {
         select
         onClick={handleClick}
         onChange={handleChange}>
-        <option value={docObject.partnerObject?.ref}>
-          {docObject.partnerObject?.name}
+        <option value={docObject.partner?.ref}>
+          {docObject.partner?.name}
         </option>
         <option value="123-235-56-5987">Rrrrr2</option>
 
@@ -164,7 +156,7 @@ export const ViewOrder: FunctionComponent = (props: any) => {
           <button>sdfsdf</button>{" "}
         </div>
       </TextField>
-      <Autocomplete defaultValue={docObject.partnerObject?.ref} />
+      <Autocomplete defaultValue={docObject.partner?.ref} />
     </div>
   );
 };

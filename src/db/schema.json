@@ -1,0 +1,18 @@
+{
+    "doc.buyers_order":{
+        "fields":[
+            {
+                "name":"partner",
+                "caption":"Контрагент",
+                "class_name":"cat.partners",
+                "isRef":true             
+            },
+            {
+                "name":"amount",
+                "caption":"Загальна сума",
+                "class_name":"number",
+                "isRef":false
+            }
+        ]
+    }
+}
