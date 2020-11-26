@@ -98,12 +98,13 @@ export abstract class cCatalog extends DBItem {
 
 export abstract class cDocument extends DBItem {
 
-
+    formObject:React.ReactNode
   constructor(class_name: string, classCaption: string, uuid: string | undefined = undefined) {
     super(class_name, classCaption, uuid)
 
     this.fields.number_doc = { caption: 'Номер', class_name: 'string', isRef: false, value: '' }
     this.fields.date = { caption: 'Дата', class_name: 'date', isRef: false, value: new Date(0) }
+    //this.form = form
     Object.defineProperties(this, {
       number_doc: {
         set: (value) => { this.fields['number_doc'].value = value },

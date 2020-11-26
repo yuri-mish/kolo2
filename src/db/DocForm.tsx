@@ -86,7 +86,7 @@ const DocForm: FunctionComponent<docObject> = (props) => {
 
 
   useEffect(() => {
-    if (!docObj) getDoc(props._id as string, (obj) =>{
+    if (!docObj) getDoc(props._id as string, (obj:cDocument) =>{
       const o =createObjectByName(class_name) 
       o?.fillProperties(obj)
       if (o)
@@ -97,7 +97,7 @@ const DocForm: FunctionComponent<docObject> = (props) => {
   }, []);
 
   let V: any; //FunctionComponent;
-  V = props.ViewForm;
+  //V = props.ViewForm;
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -108,6 +108,7 @@ const DocForm: FunctionComponent<docObject> = (props) => {
 
   if (!docObj) return <div>Об'єкт не знайдено, або недостатньо прав</div>;
 
+   V=docObj.formObject;
   return (
     <div>
       <Dialog className={classes.dialogroot} maxWidth="xl" open={dialogOpen}>
@@ -129,7 +130,9 @@ const DocForm: FunctionComponent<docObject> = (props) => {
             </Toolbar>
           </div>
         </AppBar>
-        <V docObject={docObj} disabled={readonly} />
+ 
+ <V docObject={docObj} disabled={readonly} />
+ 
       </Dialog>
     </div>
   );

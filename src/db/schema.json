@@ -8,6 +8,12 @@
                 "isRef":true             
             },
             {
+                "name":"department",
+                "caption":"Підрозділ",
+                "class_name":"cat.branches",
+                "isRef":true
+            },
+            {
                 "name":"amount",
                 "caption":"Загальна сума",
                 "class_name":"number",

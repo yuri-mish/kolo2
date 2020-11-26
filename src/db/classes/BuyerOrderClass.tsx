@@ -12,31 +12,7 @@ import Autocomplete from "../../components/autocomplete/Autocomplete";
 //     priceValue?:number;
 // }
 
-class BuyerOrder extends cDocument {
-  [key: string]: any;
-  /**
-   * Контрагент.
-   */
-  partnerObj: Partner | null = null;
 
-  constructor(uuid: string = "") {
-    super("doc.buyers_order", "Замовлення", uuid);
-    // this.partner = null;
-
-    // this.fields.partner = {
-    //   caption: "Контрагент",
-    //   class_name: "cat.partners",
-    //   isRef: true,
-    //   value: undefined,
-    //   obj: {},
-    // };
-    // const a='partner'
-    // Object.defineProperty(this, a, {
-    //     set: (value) => {this.fields.partner.isRef?(this.fields.partner.obj = value):(this.fields.partner.value = value)},
-    //     get: eval("return this.fields.partner.isRef?this.fields.partner.obj:this.fields.partner.value") //()=> {return this.fields.partner.isRef?this.fields.partner.obj:this.fields.partner.value},
-    // });
-  }
-}
 
 const seStyles = makeStyles((theme) => ({
   root: {
@@ -45,15 +21,15 @@ const seStyles = makeStyles((theme) => ({
   },
 }));
 
+const meta = mdb.schema["doc.buyers_order"]
+
 export const ViewOrder: FunctionComponent = (props: any) => {
   let docObject: BuyerOrder = props.docObject;
-  const [selectedDate, setDate] = useState(
-    new Date(docObject.date as Date)
-  );
+  const [selectedDate, setDate] = useState(new Date(docObject.date as Date));
   const [partnerRef, setPartner] = useState("");
+  const [renew, setRenew] = useState({});
   const classes = seStyles();
 
-  //    docObject.partnerObject = partnerObject;
   const stPartner = (doc: any) => {
     const ref = doc?doc._id.split("|")[1]:mdb.emptyRef
     docObject.partner = new Partner(ref);
@@ -61,9 +37,28 @@ export const ViewOrder: FunctionComponent = (props: any) => {
     else{ docObject.partner.name='<не знайдено>'}
     setPartner(ref);
   };
+
+  const st=(doc:any,field:string)=>{
+    console.log(doc.classname)
+    if (doc){
+     const class_name = doc.class_name
+     docObject.fields[field].obj = doc
+     console.log('-0-:'+class_name)
+     setRenew({})
+    }
+
+ 
+//    const class_name = doc.class_name.split("|")[1]
+  }
+  
+
   useEffect(() => {
-    getDoc("cat.partners|" + docObject.fields.partner.value, stPartner);
-    //    docObject.partnerObject = parnerObject;
+    meta.fields.forEach((field:any)=>{
+      console.log('-00-:'+field.name)
+  
+    if (field.isRef)
+      getDoc(field.class_name+"|" + docObject.fields[field.name].value, st,field.name)
+  })//    getDoc("cat.partners|" + docObject.fields.partner.value, stPartner);
     return () => {};
   }, []);
 
@@ -94,7 +89,9 @@ export const ViewOrder: FunctionComponent = (props: any) => {
     child: React.ReactNode
   ) => {
     getDoc("cat.partners|" + event.target.value, stPartner)
+    
   };
+
 
   const handleDateChange = (props: any) => {};
 
@@ -102,7 +99,7 @@ export const ViewOrder: FunctionComponent = (props: any) => {
     <div className={classes.root}>
       <h2>={docObject.partner?.name}=</h2>
       <div>
-        <TextField
+      <TextField
           style={{ width: "25%", paddingRight: "1rem" }}
           id="number_doc"
           label="Номер"
@@ -113,7 +110,7 @@ export const ViewOrder: FunctionComponent = (props: any) => {
           autoOk={false}
           showTodayButton={true}
           invalidDateMessage="невірна дата"
-          style={{ width: "40%" }}
+          style={{ width: "25%" }}
           variant="inline"
           ampm={false}
           label="Дата"
@@ -123,22 +120,8 @@ export const ViewOrder: FunctionComponent = (props: any) => {
           //                disablePast
           format="dd/MM/yyyy HH:mm:ss"
         />
-      </div>
-      <Select
-        style={{ width: "65%", paddingRight: "1rem" }}
-        id="partner"
-        label="Контрагент"
-        value={partnerRef}
-        //defaultValue={partnerRef}
-        onChange={handleSelectChange}>
-         <option value="0000" disabled>Оберіть ...</option>
-         <option value={docObject.partner?.ref}>
-          {docObject.partner?.Caption}
-        </option>
-        <option value="123-235-56-5987">Rrrrr2</option>
-      </Select>
       <TextField
-        style={{ width: "65%", paddingRight: "1rem" }}
+        style={{ width: "45%", paddingLeft: "1rem" }}
         id="partner"
         label="Контрагент"
         value={partnerRef}
@@ -156,9 +139,49 @@ export const ViewOrder: FunctionComponent = (props: any) => {
           <button>sdfsdf</button>{" "}
         </div>
       </TextField>
+        </div>
+        
+     <TextField
+          style={{ width: "45%", paddingRight: "1rem" }}
+          id="department"
+          label="Підрозділ"
+          value={docObject.department?.name}
+          defaultValue={docObject.department?.name}
+         onChange={handleChange}
+         placeholder="..."
+          disabled={false}
+        />
+        <Select
+        style={{ width: "45%", paddingRight: "1rem" }}
+        id="partner"
+        label="Контрагент"
+        value={partnerRef}
+        //defaultValue={partnerRef}
+        onChange={handleSelectChange}>
+         <option value="0000" disabled>Оберіть ...</option>
+         <option value={docObject.partner?.ref}>
+          {docObject.partner?.Caption}
+        </option>
+        <option value="123-235-56-5987">Rrrrr2</option>
+      </Select>
+     
       <Autocomplete defaultValue={docObject.partner?.ref} />
+      
     </div>
   );
 };
 
+
+class BuyerOrder extends cDocument {
+  [key: string]: any;
+  /**
+   * Контрагент.
+   */
+  //partnerObj: Partner | null = null;
+  formObject = ViewOrder
+
+  constructor(uuid: string = "") {
+    super("doc.buyers_order", "Замовлення", uuid);
+  }
+}
 export default BuyerOrder;

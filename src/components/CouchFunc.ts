@@ -123,11 +123,11 @@ const partSetName = new Set(partnerInLocalCat.docs.map((elem:any)=>(elem.partner
 export const reinit=()=> {
 }
 
-export const getDoc = (id:string,setObj:React.Dispatch<React.SetStateAction<any>>)=>{
+export const getDoc = (id:string,setObj:any,field='')=>{
   const userdb = getBaseByClassName(id)
   dbfetch('GET',userdb+'/'+id,{},
     (data)=>{
-      setObj(data)
+      setObj(data,field)
       console.log(JSON.stringify(data))
     },
     ()=>{setObj(undefined)}
