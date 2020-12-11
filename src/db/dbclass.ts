@@ -61,7 +61,7 @@ abstract class DBItem implements IDocCouch {
     let hasProps: boolean
 
     destProps.forEach((element) => {
-      console.log(element)
+   
       hasProps = sourceProps.includes(element)
       if (hasProps) this.fields[element].value = source[element]
     })
@@ -71,6 +71,9 @@ abstract class DBItem implements IDocCouch {
 }
 
 export abstract class cCatalog extends DBItem {
+
+  formObject:React.ReactNode
+  formList:React.ReactNode
 
   constructor(class_name: string, classCaption: string, uuid: string | undefined = undefined) {
     super(class_name, classCaption, uuid)
@@ -98,7 +101,8 @@ export abstract class cCatalog extends DBItem {
 
 export abstract class cDocument extends DBItem {
 
-    formObject:React.ReactNode
+  formObject:React.ReactNode
+  formList:React.ReactNode
   constructor(class_name: string, classCaption: string, uuid: string | undefined = undefined) {
     super(class_name, classCaption, uuid)
 
@@ -130,7 +134,6 @@ const addPropsFromScheme = (o: DBItem, class_name: string) => {
 
   if (fields) {
     fields.forEach((elem: any) => {
-      console.log(elem)
       o.fields[elem.name] = elem
       o.fields[elem.name].value = undefined
       if (elem.isRef) {

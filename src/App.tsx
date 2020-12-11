@@ -19,7 +19,8 @@ import { checkSession, dbinit} from "./components/CouchFunc";
 // import {initDB,reinitDB} from "./store/system/dbState"
 // import CatForm from "./db/CatForm";
 import DocForm from './db/DocForm';
-import BuyerOrder, { ViewOrder } from './db/classes/BuyerOrderClass';
+import BuyerOrder, { ViewOrder,ViewOrders } from './db/classes/BuyerOrderClass';
+import ListForm from './db/ListForm';
 
 const App: FunctionComponent = () => {
   const logged: boolean = useSelector(selectSessionLogin);
@@ -81,7 +82,9 @@ return (
                 }}>
                 22222
               </button>
+              <ListForm class_name="doc.buyers_order"/>
               <DocForm _id="doc.buyers_order|78f80230-2374-11eb-960e-0328174f068d" ViewForm={ViewOrder} />
+              
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ import './Navbar.css'
 
 
 type NavbarProps = {
-    title?:string,
+    title?:string, 
 }
 
 

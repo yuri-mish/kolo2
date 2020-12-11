@@ -1,12 +1,17 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { cDocument, mdb } from "../dbclass";
-import { makeStyles, Select } from "@material-ui/core";
+import { makeStyles, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,Paper } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { KeyboardDateTimePicker } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { Partner } from "./PartnersClass";
-import { getDoc } from "../../components/CouchFunc";
+import { getDoc, getPouchDocs } from "../../components/CouchFunc";
 import Autocomplete from "../../components/autocomplete/Autocomplete";
+import IconButton from '@material-ui/core/IconButton';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { Rowing } from "@material-ui/icons";
+import { getCouchCatArray } from './../../components/CouchFunc';
 
 // interface IGoodsCard extends CatCard  {
 //     priceValue?:number;
@@ -22,11 +27,115 @@ const seStyles = makeStyles((theme) => ({
 }));
 
 const meta = mdb.schema["doc.buyers_order"]
+export const ViewOrders: FunctionComponent = (props: any) => {
+  const [rows, setRows] = useState([]);
+  const [rowsL, setRowsL] = useState([]);
+
+  const repl2 = (docs:any) =>{
+    setRowsL(docs.rows)
+  }
+
+  useEffect(() => {
+   
+   let newRows = [...rows]
+   newRows.map((rowdoc:any)=>{
+      meta.fields.forEach((field:any)=>{
+         if(field.isRef){
+          let el:any = rowsL.find((elem:any)=>{
+              return elem.id === (field.class_name+'|'+rowdoc[field.name]) 
+          }) as {}|undefined
+          if (el){
+            if (el.doc){
+              rowdoc[field.name+'_o_'] = el.doc
+//              console.log ('=90=:'+el.doc.name+'===')
+            }
+            else{
+              rowdoc[field.name+'_o_'] = {name:'<вилучено:'+field.class_name+'|'+rowdoc[field.name]+'>'}
+//              console.log('=90=:!!!=!!!!'+JSON.stringify(el))  
+            }
+        }
+      } 
+    })
+    })
+    
+    setRows(newRows)
+
+  }, [rowsL])
+
+  const repl = (docs:any)=>{
+     const set = new Set() 
+     docs.forEach((row:any)=>{
+      meta.fields.forEach((field:any)=>{
+        if (field.isRef){
+            set.add(field.class_name+'|'+row[field.name])
+          }
+        })
+     })
+     
+  
+     setRows(docs)
+     getCouchCatArray(Array.from(set) as string[],repl2)
+  }
+
+  useEffect(() => {
+    getPouchDocs(
+      "doc.buyers_order",
+      repl,
+      ['_id','number_doc','date','partner','department','doc_amount']
+    )
+    return () => {};
+  }, []);
+
+  function Row(props: { row: any }) {
+    const { row } = props;
+
+    return(
+      <React.Fragment>
+      <TableRow >
+        <TableCell>
+          <IconButton aria-label="expand row" size="small" onClick={() => {}}>
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.number_doc}
+        </TableCell>
+        <TableCell align="right"><input defaultValue={row.date}/></TableCell>
+        <TableCell align="right">{row.partner_o_?.name}</TableCell>
+        <TableCell align="right">{row.department_o_?.name}</TableCell>
+        <TableCell align="right">{row.doc_amount}</TableCell>
+      </TableRow>
+    </React.Fragment>
+    )
+  }
+  return (
+    <div>
+  <TableContainer component={Paper}>
+      <Table aria-label="collapsible table">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Dessert </TableCell>
+            <TableCell align="right">Calories</TableCell>
+            <TableCell align="right">Fat&nbsp;(g)</TableCell>
+            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row:any) => (
+            <Row  row={row}  />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    </div>
+  )
+}
 
 export const ViewOrder: FunctionComponent = (props: any) => {
   let docObject: BuyerOrder = props.docObject;
   const [selectedDate, setDate] = useState(new Date(docObject.date as Date));
-  const [partnerRef, setPartner] = useState("");
+  const [partnerRef, setPartner] = useState(docObject.fields.partner.value);
   const [renew, setRenew] = useState({});
   const classes = seStyles();
 
@@ -39,12 +148,11 @@ export const ViewOrder: FunctionComponent = (props: any) => {
   };
 
   const st=(doc:any,field:string)=>{
-    console.log(doc.classname)
+  
     if (doc){
-     const class_name = doc.class_name
+     doc.ref = doc?._id.split('|')[1]
      docObject.fields[field].obj = doc
-     console.log('-0-:'+class_name)
-     setRenew({})
+    setRenew({fields:doc._id})
     }
 
  
@@ -144,23 +252,23 @@ export const ViewOrder: FunctionComponent = (props: any) => {
      <TextField
           style={{ width: "45%", paddingRight: "1rem" }}
           id="department"
-          label="Підрозділ"
+          //label="Підрозділ"
           value={docObject.department?.name}
           defaultValue={docObject.department?.name}
          onChange={handleChange}
          placeholder="..."
           disabled={false}
         />
-        <Select
+      <Select
         style={{ width: "45%", paddingRight: "1rem" }}
         id="partner"
         label="Контрагент"
         value={partnerRef}
-        //defaultValue={partnerRef}
+        defaultValue={partnerRef}
         onChange={handleSelectChange}>
-         <option value="0000" disabled>Оберіть ...</option>
+         <option value={mdb.emptyRef} disabled>Оберіть ...</option>
          <option value={docObject.partner?.ref}>
-          {docObject.partner?.Caption}
+          {docObject.partner?.name}
         </option>
         <option value="123-235-56-5987">Rrrrr2</option>
       </Select>
@@ -179,6 +287,7 @@ class BuyerOrder extends cDocument {
    */
   //partnerObj: Partner | null = null;
   formObject = ViewOrder
+  formList = ViewOrders
 
   constructor(uuid: string = "") {
     super("doc.buyers_order", "Замовлення", uuid);

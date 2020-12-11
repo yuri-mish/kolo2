@@ -66,8 +66,7 @@ export const dbinit=async ()=> {
   const suffix = store.getState().session.userOptions.suffix
   const departament = store.getState().session.userOptions.departament
   const doc = new Pouchdb('doc')
-  console.log("cDBS:"+_DBSERVER_)
-  const _dbs = _DBSERVER_
+   const _dbs = _DBSERVER_
   const _db = _DATABASE_
   const _sub = _DATABASE_SUB_
   
@@ -128,10 +127,31 @@ export const getDoc = (id:string,setObj:any,field='')=>{
   dbfetch('GET',userdb+'/'+id,{},
     (data)=>{
       setObj(data,field)
-      console.log(JSON.stringify(data))
+//      console.log(JSON.stringify(data))
     },
     ()=>{setObj(undefined)}
     )
+}
+
+export const getPouchDocs = (class_name:string,setObj:any,fields:string[])=>{
+  const userdb = new Pouchdb('doc')
+  userdb.find({
+    selector:{
+      class_name:class_name
+    },
+    fields:fields
+  }).then((result)=>{
+    setObj(result.docs)
+  })
+
+
+}
+
+export const getCouchCatArray = (ids:string[],setObj:any,fields:string[]=[])=>{
+  
+  //const arr = ids.map(value=>{return {id:value}})
+  const payload={keys:ids,include_docs:true}
+  dbfetch('POST',"/otk_2_ram/_all_docs",payload,setObj)
 }
 
 export const getLookup = (class_name:string)=>{

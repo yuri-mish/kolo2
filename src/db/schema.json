@@ -14,7 +14,7 @@
                 "isRef":true
             },
             {
-                "name":"amount",
+                "name":"doc_amount",
                 "caption":"Загальна сума",
                 "class_name":"number",
                 "isRef":false
