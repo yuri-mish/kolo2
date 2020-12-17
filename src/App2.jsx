@@ -5,8 +5,12 @@ import 'devextreme/dist/css/dx.light.css';
  
 import Button from 'devextreme-react/button';
 import CustomStore from "devextreme/data/custom_store";
-import DataGrid, { Column, Editing, Paging, Lookup } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Editing, Paging, Lookup,DropDownOptions } from 'devextreme-react/data-grid';
 import { RepeatOne } from '@material-ui/icons';
+import { Dialog } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import { useState } from 'react';
+import { Order } from './order';
 
  
 // class App2 extends React.Component {
@@ -44,7 +48,10 @@ const customDataSource = new CustomStore({
       
         return fetch('http://localhost:4000/',{
             method: "POST",
-            body:JSON.stringify({query:
+         //   credentials:"omit",
+         //credentials: 'same-origin',
+         //credentials: 'include',
+        body:JSON.stringify({query:
                 `{buyers_orders(limit:1000)
                     { 
                      _id 
@@ -102,23 +109,39 @@ const customDataSource = new CustomStore({
 
   const lookupDataSource = new CustomStore({
     key: "ref",
-    byKey: function (key) { 
-        console.log(key)
-//        return $.get('http://sampleservices.devexpress.com/api/Categories/' + key.toString());  
-        return this.load({ref:key}) //$.get('http://sampleservices.devexpress.com/api/Categories/' + key.toString());  
-            }  ,
-    load: (options) => {
-        
-        return fetch('http://localhost:4000/',{
-            method: "POST",
-            body:JSON.stringify({query:
-                `{partners (limit:50, ref:${options.ref})
+    byKey:  function (key) { 
+    //    console.log("2:",this.); 
+        var res =  this.load({lookUp:key})
+        return res.then((dat)=>{
+                var ob = dat.data?.find(elem => elem.ref === key)
+                return ob 
+            })}  ,
+            paginate: true,
+            pageSize: 10,
+    //        onModifying:(dat)=>{console.log("2:",dat)},
+    load:  async (options) => {
+        console.log(options)
+       if (options.filter) return {data:[]}
+       let search='';
+       if (options.searchOperation && options.searchValue)
+           search = ', nameContaine:"'+options.searchValue+'"'
+
+       let lookUp='';
+        if (options.lookUp) 
+            lookUp = ', lookup:"'+options.lookUp+'"'
+              
+ //       console.log(options)
+        const q=`{partners (limit:50 ${lookUp} ${search})
                     { 
                      ref 
                      name
                     } 
                  }` 
-                }),
+        
+ //       console.log(q)
+        return fetch('http://localhost:4000/',{
+            method: "POST",
+            body:JSON.stringify({query:q}),
             headers: {
                 'Content-Type': 'application/json'
                 },
@@ -126,22 +149,38 @@ const customDataSource = new CustomStore({
               .then((response) => {
                 return response.json()
             }).then((data)=>{
+//                console.log(data.data.partners)
+
                 return {
                     data: data.data.partners,
-                    totalCount: data.data.partners.length,
+//                   totalCount: data.data.partners.length,
                 }
             })
     },
   });
 
+const useStyles = makeStyles((theme) => ({
+    dialogroot: {
+        overflowY:"visible"
+      },
+}))
+
+
 const App2 =()=> {
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const classes = useStyles();
 
     const sayHelloWorld = ()=> {
-        alert('Hello world!')
+        setDialogOpen(!dialogOpen)
+//        alert('Hello world!')
     }
 
     return (
             <div>
+            <Dialog className={classes.dialogroot} maxWidth="xl" open={dialogOpen}>
+                <Order/>
+            </Dialog>
             <Button
                 text="Click me"
                 onClick={sayHelloWorld}
@@ -149,7 +188,6 @@ const App2 =()=> {
             <DataGrid
           id="gridContainer"
           dataSource={customDataSource}
-          keyExpr="ID"
           allowColumnReordering={true}
           showBorders={true}
           allowSorting = {true}
@@ -196,9 +234,22 @@ const App2 =()=> {
           dataType="string"
           //format="currency"
           alignment="left"
-          calculateDisplayValue={(data)=> {console.log(data) ; return data.partner?.name}}
+          calculateDisplayValue={(data)=> {
+//                console.log(data) ; 
+                return data.partner?.name}}
         >
-         <Lookup dataSource={lookupDataSource} valueExpr="ref" displayExpr="name" />
+         <Lookup 
+            dataSource={lookupDataSource} 
+            valueExpr="ref" 
+            displayExpr="name" 
+        
+            minSearchLength={3} 
+            searchTimeout={500}
+            
+            >
+            
+           
+         </Lookup>
         </Column> 
 
           <Column
@@ -206,7 +257,7 @@ const App2 =()=> {
           caption="Сума"
           dataType="number"
           //format="currency"
-          alignment="right"
+          alignment="right" 
      
 //          calculateCellValue={(data)=> {console.log(data) ; return data.partner?.name}}
         />
