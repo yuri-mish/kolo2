@@ -11,6 +11,7 @@ import { Dialog } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { useState } from 'react';
 import { Order } from './order';
+import { Popup } from 'devextreme-react';
 
  
 // class App2 extends React.Component {
@@ -178,10 +179,19 @@ const App2 =()=> {
 
     return (
             <div>
-            <Dialog className={classes.dialogroot} maxWidth="xl" open={dialogOpen}>
+            <Popup
+          visible={dialogOpen}
+          onHiding={()=>{setDialogOpen(!dialogOpen)}}
+          dragEnabled={false}
+          closeOnOutsideClick={true}
+          showTitle={true}
+          title="Замовлення"
+          width={600}
+          //height={250}
+        >
                 <Order/>
-            </Dialog>
-            <Button
+                </Popup>
+          <Button
                 text="Click me"
                 onClick={sayHelloWorld}
             />

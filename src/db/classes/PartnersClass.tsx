@@ -2,6 +2,7 @@
 
 import {cCatalog, dbSourceType} from '../dbclass'
 
+
 export class Partner extends cCatalog {
     
     /**
@@ -31,6 +32,4 @@ export class PartnerList {
 
      }
 }
-
-
 

@@ -6,12 +6,23 @@ import { format } from "date-fns";
 import { TextBox, DateBox } from "devextreme-react";
 import { locale } from "devextreme/localization";
 import moment from "moment";
-import Lookup, { DropDownOptions } from "devextreme-react/lookup";
+import Lookup from "devextreme-react/lookup";
 import DataSource from "devextreme/data/data_source";
 import SelectBox from "devextreme-react/select-box";
 import CustomStore from "devextreme/data/custom_store";
 import { RemoteOperations } from "devextreme-react/data-grid";
 import { search } from "pouchdb-find";
+import { DropDownBox, DropDownOptions } from "devextreme-react/drop-down-box";
+import DataGrid, {
+  Selection,
+  Paging,
+  FilterRow,
+  Scrolling,
+  Column,
+  HeaderFilter,
+} from "devextreme-react/data-grid";
+
+import { partnerDataSource } from "./db/ds/dsPartners";
 
 const handleErrors = (response) => {
   if (!response.ok) {
@@ -48,7 +59,11 @@ export const Order = (props) => {
         .then((response) => response.data.partners[0]);
     },
 
+    // load: () => {    console.log("load():")
+    //         return ({})
+    //   },
 
+    // load2: (options) => {
     load: (options) => {
       console.log("Options:" + JSON.stringify(options));
 
@@ -87,9 +102,9 @@ export const Order = (props) => {
     update: (dat, values) => {
       console.log("6:");
     },
-    search: (dat) => {
-      console.log("Search:" + dat);
-    },
+    // search: (dat) => {
+    //   console.log("Search:" + dat);
+    // },
   });
 
   const OrderSchema = {
@@ -162,6 +177,8 @@ export const Order = (props) => {
 
   locale("uk"); //!!!!+++
   console.log("=" + data.date);
+
+
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -190,15 +207,45 @@ export const Order = (props) => {
           dataSource={lookupDataSource}
           valueExpr="ref"
           displayExpr="name"
-          searchExpr="name"
+          //searchExpr="name"
           placeholder="Контрагент"
-          minSearchLength={3}
+          //minSearchLength={1}
           searchTimeout={500}
           //onValueChanged={onValueChanged}
-//          applyValueMode="useButtons"
-          />
-          
+          //          applyValueMode="useButtons"
+        />
 
+        <DropDownBox
+          //              value="ffff"
+          value={data.partner.ref}
+          valueExpr="ref"
+          deferRendering={false}
+          displayExpr="name"
+          //              displayExpr={this.gridBox_displayExpr}
+          placeholder="Select a value..."
+          showClearButton={true}
+          dataSource={partnerDataSource}
+          onValueChanged={(e) => {
+            console.log(e);
+          }}
+          //             contentRender={dataGridRender}
+        >
+          <DataGrid
+            remoteOperations={true}
+            dataSource={partnerDataSource}
+            columns={["ref", "name", "edrpou"]}
+            hoverStateEnabled={true}
+            //selectedRowKeys={this.state.gridBoxValue}
+            onSelectionChanged={(e) => {
+              console.log(e);
+            }}
+            height="100%">
+            <Selection mode="single" />
+            <Scrolling mode="infinite" />
+            <Paging enabled={true} pageSize={10} />
+            <FilterRow visible={true} />
+          </DataGrid>
+        </DropDownBox>
       </div>
 
       <TextBox
