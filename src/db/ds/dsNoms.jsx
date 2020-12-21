@@ -1,14 +1,17 @@
 import  CustomStore  from 'devextreme/data/custom_store';
 
-export const partnerDataSource = new CustomStore({
+const cls_name='noms'
+
+export const nomsDataSource = new CustomStore({
 
     key: "ref", 
     
     byKey: (ref) => {
+
       if (!ref) return {ref:ref,name:''}
-      console.log("=2:", ref);
+      console.log("=2-Noms=:", ref);
       //var res =  this.load({lookUp:keyf})
-      const q = `{partners (ref:"${ref}" ) { ref name edrpou } }`;
+      const q = `{${cls_name} (ref:"${ref}" ) { ref name } }`;
       
       return fetch("http://localhost:4000/", {
         method: "POST",
@@ -20,7 +23,7 @@ export const partnerDataSource = new CustomStore({
 //        .then(handleErrors)
         .then((response) => response.json())
         .then((response) => { 
-            const res = (response.data.partners.length===0)?{ref:ref,name:''}:response.data.partners[0]
+            const res = (response.data[cls_name].length===0)?{ref:ref,name:''}:response.data[cls_name][0]
             console.log("=res:", res);   
             return res
           })
@@ -28,7 +31,7 @@ export const partnerDataSource = new CustomStore({
 
 
      load: (options) => {
-      console.log("=Options:" + JSON.stringify(options));
+      console.log("=Noms=Options:" + JSON.stringify(options));
 
       let _search =
         options.searchOperation && options.searchValue
@@ -63,7 +66,7 @@ export const partnerDataSource = new CustomStore({
       if (options.skip)
         _offset = ` offset:${options.skip}`
 
-      const q = `{partners (limit:50 ${lookUp} ${_search} ${_filter} ${_offset}) { ref name edrpou}}`//name edrpou } }`;
+      const q = `{${cls_name} (limit:50 ${lookUp} ${_search} ${_filter} ${_offset}) { ref name }}`
              console.log(q) 
 
       return fetch("http://localhost:4000/", {
@@ -78,9 +81,9 @@ export const partnerDataSource = new CustomStore({
           return response.json();
         })
         .then((response) => {
-          console.log(response.data.partners)
+          console.log(response.data[cls_name])
           return {
-            data: response.data.partners
+            data: response.data[cls_name]
           };
         });
     },

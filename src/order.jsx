@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { useState } from "react";
 // import { makeStyles } from '@material-ui/core';
 import { format } from "date-fns";
-import { TextBox, DateBox } from "devextreme-react";
+import { TextBox, DateBox, Menu, Box } from "devextreme-react";
 import { locale } from "devextreme/localization";
 import moment from "moment";
-import Lookup from "devextreme-react/lookup";
+//import Lookup from "devextreme-react/lookup";
 import DataSource from "devextreme/data/data_source";
 import SelectBox from "devextreme-react/select-box";
 import CustomStore from "devextreme/data/custom_store";
@@ -20,9 +20,15 @@ import DataGrid, {
   Scrolling,
   Column,
   HeaderFilter,
+  Editing,
+  Lookup,
 } from "devextreme-react/data-grid";
 
+import { Item } from "devextreme-react/box";
+
 import { partnerDataSource } from "./db/ds/dsPartners";
+import { nomsDataSource } from "./db/ds/dsNoms";
+import { Button } from "devextreme-react/button";
 
 const handleErrors = (response) => {
   if (!response.ok) {
@@ -32,6 +38,9 @@ const handleErrors = (response) => {
 };
 
 export const Order = (props) => {
+
+  var rowData={}
+
   const lookupDataSource = new CustomStore({
     key: "ref",
 
@@ -138,7 +147,7 @@ export const Order = (props) => {
                         name
                         name_full
                       }
-                      price
+                      price quantity amount discount_percent
                     }
                   }
                 }`,
@@ -178,31 +187,50 @@ export const Order = (props) => {
   locale("uk"); //!!!!+++
   console.log("=" + data.date);
 
+  const onQuantityChanged = (r)=>{
+    console.log('=99=',r);
+    console.log('=00=',rowData);
+    rowData.amount = rowData.price*r.target.value;
+    setData((prevState) => ({
+      ...prevState,
+      service: rowData,
+    }));
+    
+
+  }
 
   return (
     <div>
-      <div style={{ display: "flex" }}>
-        <TextBox value={data.number_doc} placeholder="номер документа" />
+     
+          <div className="dx-field-label"> Номер </div>
+          <div className="dx-field-value">
+        
+            <TextBox value={data.number_doc} placeholder="номер документа" />
+          </div>
+     
+          <div className="dx-field-label"> Дата </div>
+          <div className="dx-field-value">
+            <DateBox
+              id="date"
+              type="datetime"
+              //        min={this.minDate}
+              //                max={this.now}
+              //defaultValue ={Date.now()}
 
-        <DateBox
-          id="date"
-          type="datetime"
-          //        min={this.minDate}
-          //                max={this.now}
-          //defaultValue ={Date.now()}
+              value={
+                data.date
+                //                        data.date?Date.parse(data.date):Date.now()
+              }
+              displayFormat={"dd-MM-yyyy HH:mm:ss"}
+              useMaskBehavior={true}
+              onValueChanged={onValueChanged}
+              //                disabledDates={this.getDisabledDates}
+            />
+          </div>
+   
 
-          value={
-            data.date
-            //                        data.date?Date.parse(data.date):Date.now()
-          }
-          displayFormat={"dd-MM-yyyy HH:mm:ss"}
-          useMaskBehavior={true}
-          onValueChanged={onValueChanged}
-          //                disabledDates={this.getDisabledDates}
-        />
-      </div>
       <div className="dx-field">
-        <Lookup
+        {/* <Lookup
           value={data.partner.ref}
           dataSource={lookupDataSource}
           valueExpr="ref"
@@ -213,49 +241,144 @@ export const Order = (props) => {
           searchTimeout={500}
           //onValueChanged={onValueChanged}
           //          applyValueMode="useButtons"
-        />
+        /> */}
+      
+            <div className="dx-field-label" > Контрагент </div>
+      
+            <div className="dx-field-value" ><DropDownBox  
+              //              value="ffff"
+              value={data.partner.ref}
+              valueExpr="ref"
+              deferRendering={false}
+              displayExpr="name"
+              //              displayExpr={this.gridBox_displayExpr}
+              placeholder="контрагент ..."
+              showClearButton={false}
+              dataSource={partnerDataSource}
+              // onValueChanged={(e) => {
 
-        <DropDownBox
-          //              value="ffff"
-          value={data.partner.ref}
-          valueExpr="ref"
-          deferRendering={false}
-          displayExpr="name"
-          //              displayExpr={this.gridBox_displayExpr}
-          placeholder="Select a value..."
-          showClearButton={true}
-          dataSource={partnerDataSource}
-          onValueChanged={(e) => {
-            console.log(e);
-          }}
-          //             contentRender={dataGridRender}
-        >
-          <DataGrid
-            remoteOperations={true}
-            dataSource={partnerDataSource}
-            columns={["ref", "name", "edrpou"]}
-            hoverStateEnabled={true}
-            //selectedRowKeys={this.state.gridBoxValue}
-            onSelectionChanged={(e) => {
-              console.log(e);
-            }}
-            height="100%">
-            <Selection mode="single" />
-            <Scrolling mode="infinite" />
-            <Paging enabled={true} pageSize={10} />
-            <FilterRow visible={true} />
-          </DataGrid>
-        </DropDownBox>
+              //   console.log(e);
+              // }}
+              //             contentRender={dataGridRender}
+            >
+              <Menu
+                onItemClick={(e) => {
+                  console.log(e);
+                }}
+                dataSource={[
+                  {
+                    text: "Вибрати",
+                  },
+                  {
+                    text: "Додати",
+                  },
+                  {
+                    text: "Закрити",
+                  },
+                  {
+                    text: "Інше",
+                    items: [
+                      {
+                        text: " інше 1",
+                      },
+                      {
+                        text: "штше 2",
+                      },
+                    ],
+                  },
+                ]}></Menu>
+
+              <DataGrid
+                remoteOperations={true}
+                dataSource={partnerDataSource}
+                //      columns={["ref", "name", "edrpou"]}
+                hoverStateEnabled={true}
+                //selectedRowKeys={this.state.gridBoxValue}
+                onSelectionChanged={(e) => {
+                  setData((prevState) => ({
+                    ...prevState,
+                    partner: {
+                      ref: e.selectedRowsData[0].ref,
+                      name: e.selectedRowsData[0].name,
+                    },
+                  }));
+                  //console.log(e);
+                }}
+                height="90%">
+                <Selection mode="single" />
+                <Scrolling mode="infinite" />
+                <Paging enabled={true} pageSize={50} />
+                <FilterRow visible={true} />
+                <Column dataField="ref" visible={false} />
+                <Column dataField="name" caption="Назва" />
+                <Column dataField="edrpou" caption="код ЄДРПОУ" />
+              </DataGrid>
+            </DropDownBox></div>
+     
       </div>
 
-      <TextBox
+      {/* <TextBox
         value={format(
           data.date ? Date.parse(data.date) : Date.now(),
           "dd-MM-yyyyHH:mm:ss"
         )}
         placeholder="дата документа"
         mask="00-00-0000 00:00:00"
-      />
+      /> */}
+      <DataGrid
+        remoteOperations={false}
+        showBorders={true}
+        dataSource={data.services.slice()}
+        //      columns={["ref", "name", "edrpou"]}
+        hoverStateEnabled={true}
+        //selectedRowKeys={this.state.gridBoxValue}
+        on={(e) => {
+          console.log('=999=',e)}}
+        onSelectionChanged={(e) => {
+          console.log('=9=',e);
+                setData((prevState) => ({
+            ...prevState,
+            partner: {
+              ref: e.selectedRowsData[0].ref,
+              name: e.selectedRowsData[0].name,
+            },
+          }))
+        }}
+          selectTextOnEditStart={true}
+          //startEditAction={(e)=>{console.log('startEditAction'+e)}}
+//         onSaving={onQuantityChanged}
+          onEditorPrepared={(e)=>{
+            if (e.dataField === 'quantity') {
+                rowData = e.row.data;
+                e.editorElement.onkeydown = onQuantityChanged
+                console.log(e)
+          }} }
+        >
+        <Editing
+          mode="cell"
+          allowUpdating={true}
+          allowAdding={true}
+          allowDeleting={true}
+        />
+
+        <Column
+          dataField="nom.ref"
+          calculateDisplayValue={(data) => {
+            //                console.log(data) ;
+            return data.nom?.name;
+          }}>
+          <Lookup
+            dataSource={nomsDataSource}
+            valueExpr="ref"
+            displayExpr="name"
+            minSearchLength={3}
+            searchTimeout={500}></Lookup>
+        </Column>
+        <Column dataField="price" caption="Ціна" />
+        <Column dataField="quantity" caption="Кількість" />
+        <Column dataField="discount_percent" caption="%скидки" />
+        <Column dataField="amount" caption="Сума" />
+      </DataGrid>
     </div>
   );
 };

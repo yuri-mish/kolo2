@@ -186,7 +186,8 @@ const App2 =()=> {
           closeOnOutsideClick={true}
           showTitle={true}
           title="Замовлення"
-          width={600}
+          //width={600}
+          width="80%"
           //height={250}
         >
                 <Order/>
